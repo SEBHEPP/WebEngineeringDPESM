@@ -5,28 +5,28 @@ webshop-projekt/
 ├── docker-compose.yml       # Das Herzstück (startet DB, Backend & ggf. Frontend-Server)
 │
 ├── docs/                    # Hier landen eure Abgabedokumente (10 Punkte)
-│   ├── architektur.png      # Person 1
-│   ├── erm_modell.png       # Person 5
-│   ├── mockups.pdf          # Person 2
-│   └── benutzerhandbuch.pdf # Person 2
+│   ├── architektur.png      # Sebi
+│   ├── erm_modell.png       # Dennis
+│   ├── mockups.pdf          # Eli
+│   └── benutzerhandbuch.pdf # Eli
 │
-├── database/                # Datenbank-Setup (Person 5 & 1)
+├── database/                # Datenbank-Setup (Dennis & Sebi)
 │   └── init.sql             # Wird von Docker beim ersten Start ausgeführt (erstellt Tabellen)
 │
-├── frontend/                # Vanilla HTML, CSS, JS (Person 2 Lead)
+├── frontend/                # Vanilla HTML, CSS, JS (Eli Lead)
 │   ├── index.html           # Landingpage / Login
 │   ├── css/
 │   │   └── style.css        # Globale Styles, Responsive Design (20 Punkte)
 │   ├── js/
 │   │   ├── api.js           # GANZ WICHTIG: Zentrale Datei für alle fetch()-Aufrufe an das Backend
-│   │   ├── shop.js          # Logik für den Shop (Person 3)
-│   │   └── wishlist.js      # Logik für die Wunschlisten (Person 5)
+│   │   ├── shop.js          # Logik für den Shop (Felix)
+│   │   └── wishlist.js      # Logik für die Wunschlisten (Dennis)
 │   └── pages/               # Weitere Ansichten
 │       ├── admin-dashboard.html
 │       ├── warenkorb.html
 │       └── wunschlisten.html
 │
-└── backend/                 # Node.js & Express (Person 1, 3, 4, 5)
+└── backend/                 # Node.js & Express (Sebi, Felix, Mr Eis, Dennis)
     ├── Dockerfile           # Baut das Node.js Image
     ├── package.json         # Dependencies (express, pg, nodemailer, etc.)
     ├── server.js            # Einstiegspunkt (verbindet alle Routen)
@@ -36,14 +36,14 @@ webshop-projekt/
     │   └── db.js            # Zentrale PostgreSQL-Verbindung
     │
     ├── middlewares/         
-    │   ├── checkAuth.js     # Prüft, ob User eingeloggt ist (Person 4)
-    │   └── checkAuto.js     # Der Autorisierungs-Endpoint für Rechte (Person 1)
+    │   ├── checkAuth.js     # Prüft, ob User eingeloggt ist (Mr Eis)
+    │   └── checkAuto.js     # Der Autorisierungs-Endpoint für Rechte (Sebi)
     │
     ├── routes/              # Hier arbeitet ihr parallel, ohne euch in die Quere zu kommen!
-    │   ├── auth.routes.js   # Person 4 (Login, Registrierung)
-    │   ├── user.routes.js   # Person 4 (Admin verwaltet User)
-    │   ├── inv.routes.js    # Person 3 (Produkte, Warenkorb)
-    │   └── wun.routes.js    # Person 5 (Wunschlisten)
+    │   ├── auth.routes.js   # Mr Eis (Login, Registrierung)
+    │   ├── user.routes.js   # Mr Eis (Admin verwaltet User)
+    │   ├── inv.routes.js    # Felix (Produkte, Warenkorb)
+    │   └── wun.routes.js    # Dennis (Wunschlisten)
     │
     └── controllers/         # Die eigentliche Logik hinter den Routen
         ├── auth.controller.js
