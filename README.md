@@ -52,3 +52,115 @@ flowchart TD
     P1 ~~~ P3
 ```
 
+
+## Lokales Starten mit Docker
+
+### Voraussetzungen
+
+* Docker Desktop muss installiert und gestartet sein.
+* Das Repository muss lokal geklont sein.
+* Alle Befehle werden im Projekt-Hauptordner ausgeführt.
+
+### Projekt aktualisieren
+
+```bash
+git pull
+```
+
+### Container starten
+
+```bash
+docker compose up --build
+```
+
+Beim ersten Start werden die benötigten Images geladen und das Backend-Image gebaut. Danach laufen folgende Dienste:
+
+| Dienst      | URL / Port                       | Zweck                                                   |
+| ----------- | -------------------------------- | ------------------------------------------------------- |
+| Webshop-App | http://localhost:3000            | Frontend und Express-Backend                            |
+| Healthcheck | http://localhost:3000/api/health | Prüft Backend und Datenbankverbindung                   |
+| Maildev     | http://localhost:1080            | Lokale Testoberfläche für E-Mails                       |
+| pgAdmin     | http://localhost:5050            | Datenbankadministration für Entwicklung                 |
+| PostgreSQL  | localhost:5433                   | Externer Zugriff auf die Datenbank, z. B. über DB-Tools |
+
+### Erwarteter Healthcheck
+
+Im Browser öffnen:
+
+```text
+http://localhost:3000/api/health
+```
+
+Erwartete Antwort:
+
+```json
+{
+  "status": "ok",
+  "service": "backend",
+  "database": "connected",
+  "time": "..."
+}
+```
+
+### pgAdmin-Zugang
+
+pgAdmin öffnen:
+
+```text
+http://localhost:5050
+```
+
+Login:
+
+```text
+E-Mail:    admin@webshop.dev
+Passwort:  adminadmin
+```
+
+Danach in pgAdmin einen neuen Server registrieren:
+
+Tab **General**:
+
+```text
+Name: webshop-db
+```
+
+Tab **Connection**:
+
+```text
+Host name/address: db
+Port: 5432
+Maintenance database: webshop
+Username: webshop_user
+Password: webshop_password
+```
+
+Wichtig: In pgAdmin muss als Host `db` verwendet werden, nicht `localhost`, weil pgAdmin selbst in einem Docker-Container läuft.
+
+### Maildev
+
+Maildev öffnen:
+
+```text
+http://localhost:1080
+```
+
+Dort erscheinen später lokale Testmails, z. B. Registrierungslinks, Login-Codes oder Einkaufsbestätigungen.
+
+### Container stoppen
+
+```bash
+docker compose down
+```
+
+Dieser Befehl stoppt und entfernt die Container, behält aber die Datenbank-Volumes. Die lokalen Daten bleiben also erhalten.
+
+### Datenbank komplett zurücksetzen
+
+Nur verwenden, wenn die lokale Entwicklungsdatenbank vollständig gelöscht und neu aus `database/init.sql` aufgebaut werden soll:
+
+```bash
+docker compose down -v
+docker compose up --build
+```
+
