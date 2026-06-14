@@ -1,0 +1,21 @@
+# macOS
+.DS_Store
+
+# Node
+node_modules/
+npm-debug.log*
+
+# Environment files
+.env
+backend/.env
+
+# Docker / local data
+postgres-data/
+pgdata/
+
+# Logs
+logs/
+*.log
+
+# VS Code optional
+.vscode/
