@@ -1,0 +1,18 @@
+:root {
+  --ink: #22201e;
+  --ink-soft: #4b4641;
+  --brown: #785b43;
+  --brown-dark: #35271f;
+  --camel: #bd9b77;
+  --cream: #f3ede4;
+  --paper: #fbf9f5;
+  --white: #fff;
+  --line: #ded5ca;
+  --muted: #746d66;
+  --success: #365d42;
+  --radius-sm: 8px;
+  --radius: 16px;
+  --radius-lg: 26px;
+  --shadow: 0 18px 48px rgba(53, 39, 31, .09);
+  --container: 1240px;
+}
