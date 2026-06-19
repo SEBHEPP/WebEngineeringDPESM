@@ -1,20 +1,6 @@
-body {
-  font-family: Arial, sans-serif;
-  margin: 2rem;
-}
-
-main {
-  max-width: 900px;
-}
-
-button {
-  padding: 0.6rem 1rem;
-  cursor: pointer;
-}
-
-pre {
-  margin-top: 1rem;
-  padding: 1rem;
-  background: #f4f4f4;
-  overflow-x: auto;
-}
+@import url("variables.css");
+@import url("base.css");
+@import url("layout.css");
+@import url("components.css");
+@import url("pages.css");
+@import url("responsive.css");
