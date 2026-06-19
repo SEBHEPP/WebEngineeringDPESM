@@ -45,10 +45,12 @@
     <div class="table-card" style="margin-top:34px">
       <h3>Autorisierung prüfen</h3>
       <div class="form-grid" style="margin-top:18px">
-        <div class="field"><label>User-ID</label><input name="authUserId" placeholder="U-1001"></div>
-        <div class="field"><label>Ressource-ID</label><input name="authResourceId" placeholder="GM-1001 oder WL-2001"></div>
-        <div class="field"><label>Aktion</label><select name="authAction"><option>lesen</option><option>bearbeiten</option><option>löschen</option><option>kaufen</option></select></div>
-        <div class="field"><label>Ergebnis</label><input value="erlaubt / abgelehnt" readonly></div>
+        <div class="field"><label>User-ID</label><input id="autoUserId" name="authUserId" placeholder="1 oder U-1"></div>
+        <div class="field"><label>Ressource</label><select id="autoResourceType" name="authResourceType"><option value="product">Produkt</option><option value="wishlist">Wunschliste</option><option value="user">User</option><option value="order">Bestellung</option></select></div>
+        <div class="field"><label>Ressource-ID</label><input id="autoResourceId" name="authResourceId" placeholder="7 oder GM-7"></div>
+        <div class="field"><label>Aktion</label><select id="autoAction" name="authAction"><option value="read">lesen</option><option value="update">bearbeiten</option><option value="delete">löschen</option><option value="buy">kaufen</option><option value="share">teilen</option></select></div>
+        <div class="field"><label>Ergebnis</label><input id="autoResult" value="erlaubt / abgelehnt" readonly></div>
+        <div class="field"><label>&nbsp;</label><button id="autoCheckBtn" class="btn" type="button">Prüfen</button></div>
       </div>
       <p class="interface-note">AUTO-1: Diese Oberfläche ist die einfache Frontend-Schnittstelle für die spätere Entscheidung per User-ID, Ressource-ID und Aktion.</p>
     </div>
@@ -85,5 +87,6 @@
   </div>
 </footer>
 
+<script src="../../js/auto-check.js"></script>
 </body>
 </html>

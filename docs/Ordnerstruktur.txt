@@ -19,6 +19,7 @@ webshop-projekt/
 │   │   └── style.css        # Globale Styles, Responsive Design (20 Punkte)
 │   ├── js/
 │   │   ├── api.js           # GANZ WICHTIG: Zentrale Datei für alle fetch()-Aufrufe an das Backend
+│   │   ├── auto-check.js    # AUTO-1 Prüffläche im Admin-Dashboard
 │   │   ├── shop.js          # Logik für den Shop (Felix)
 │   │   └── wishlist.js      # Logik für die Wunschlisten (Dennis)
 │   └── pages/               # Weitere Ansichten
@@ -29,23 +30,34 @@ webshop-projekt/
 └── backend/                 # Node.js & Express (Sebi, Felix, Mr Eis, Dennis)
     ├── Dockerfile           # Baut das Node.js Image
     ├── package.json         # Dependencies (express, pg, nodemailer, etc.)
-    ├── server.js            # Einstiegspunkt (verbindet alle Routen)
+    ├── server.js            # Startet den HTTP-Server
+    ├── app.js               # Express-Setup, Frontend-Auslieferung, API-Routing, Fehlerbehandlung
     ├── .env.example         # Template für Umgebungsvariablen (DB-Passwort, Ports)
     │
     ├── config/              
     │   └── db.js            # Zentrale PostgreSQL-Verbindung
     │
     ├── middlewares/         
-    │   ├── checkAuth.js     # Prüft, ob User eingeloggt ist (Mr Eis)
-    │   └── checkAuto.js     # Der Autorisierungs-Endpoint für Rechte (Sebi)
+    │   ├── errorHandler.js  # Zentrale Fehlerantworten
+    │   ├── notFoundHandler.js # API-404-Fallback
+    │   ├── checkAuth.js     # Geplant: Prüft, ob User eingeloggt ist (Mr Eis)
+    │   └── checkAuto.js     # Autorisierungsprüfung für geschützte Routen (Sebi)
     │
     ├── routes/              # Hier arbeitet ihr parallel, ohne euch in die Quere zu kommen!
-    │   ├── auth.routes.js   # Mr Eis (Login, Registrierung)
-    │   ├── user.routes.js   # Mr Eis (Admin verwaltet User)
-    │   ├── inv.routes.js    # Felix (Produkte, Warenkorb)
-    │   └── wun.routes.js    # Dennis (Wunschlisten)
+    │   ├── index.js         # Sammelt alle API-Routen unter /api
+    │   ├── health.routes.js # Healthcheck inklusive Datenbankprüfung
+    │   ├── auto.routes.js   # AUTO-1 Entscheidungsinstanz
+    │   ├── auth.routes.js   # Geplant: Mr Eis (Login, Registrierung)
+    │   ├── user.routes.js   # Geplant: Mr Eis (Admin verwaltet User)
+    │   ├── inv.routes.js    # Geplant: Felix (Produkte, Warenkorb)
+    │   └── wun.routes.js    # Geplant: Dennis (Wunschlisten)
     │
-    └── controllers/         # Die eigentliche Logik hinter den Routen
-        ├── auth.controller.js
-        ├── inv.controller.js
-        └── ...
+    ├── controllers/         # Request-/Response-Logik hinter den Routen
+    │   ├── health.controller.js
+    │   ├── auto.controller.js
+    │   ├── auth.controller.js # Geplant
+    │   ├── inv.controller.js  # Geplant
+    │   └── ...
+    │
+    └── services/            # Fachlogik und Datenbankoperationen
+        └── authorization.service.js # AUTO-1 Regeln und DB-Prüfungen

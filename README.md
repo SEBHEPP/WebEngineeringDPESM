@@ -102,6 +102,59 @@ Erwartete Antwort:
 }
 ```
 
+### AUTO-1 Autorisierung prüfen
+
+Der zentrale Autorisierungs-Endpunkt entscheidet, ob ein User eine Aktion auf einer Ressource ausführen darf:
+
+```text
+POST http://localhost:3000/api/auto/check
+```
+
+Beispiel-Request:
+
+```json
+{
+  "userId": 1,
+  "resourceType": "product",
+  "resourceId": 7,
+  "action": "delete"
+}
+```
+
+Beispiel-Antwort:
+
+```json
+{
+  "allowed": false,
+  "reason": "admin_required",
+  "user": {
+    "id": 1,
+    "isAdmin": false,
+    "isVerified": true,
+    "isBlocked": false
+  },
+  "resource": {
+    "type": "product",
+    "id": 7
+  },
+  "action": "delete"
+}
+```
+
+Unterstützte Ressourcentypen:
+
+```text
+product, wishlist, user, order
+```
+
+Unterstützte Aktionen sind auf Englisch und Deutsch möglich, z. B.:
+
+```text
+read/lesen, create/erstellen, update/bearbeiten, delete/löschen, buy/kaufen, share/teilen
+```
+
+Wichtig: Bis der Auth-Service fertig ist, akzeptiert der Prüf-Endpunkt `userId` im Request-Body. Sobald `authenticate` vorhanden ist, wird `req.user.id` bevorzugt und `userId` aus dem Body nur noch für Tests relevant sein.
+
 ### pgAdmin-Zugang
 
 pgAdmin öffnen:
@@ -114,7 +167,7 @@ Login:
 
 ```text
 E-Mail:    admin@webshop.dev
-Passwort:  adminadmin
+Passwort:  admin
 ```
 
 Danach in pgAdmin einen neuen Server registrieren:
