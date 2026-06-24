@@ -41,24 +41,36 @@
         <div class="admin-tools">
           <h3>Produkt suchen</h3>
           <div class="form-grid">
-            <div class="field"><label>Produkt-ID</label><input name="productId" placeholder="GM-1001"></div>
-            <div class="field"><label>Name oder Kategorie</label><input name="productQuery" placeholder="Anzug oder Schuhe"></div>
+            <div class="field"><label>Produkt-ID</label><input id="searchProductId" placeholder="z. B. 1"></div>
+            <div class="field"><label>Name oder Beschreibung</label><input id="searchProductQuery" placeholder="z. B. Anzug"></div>
           </div>
           <p class="interface-note">Backend-Schnittstelle: gezielte Suche per ID und Produktsuche mit mindestens zwei Suchkriterien.</p>
         </div>
-        <table class="clean-table"><thead><tr><th>ID</th><th>Name</th><th>Beschreibung</th><th>Preis</th><th>Bestand</th><th>Status</th><th>Aktion</th></tr></thead>
-        <tbody><tr><td>GM-1001</td><td>Anzug Milano</td><td>Moderner Schnitt in Anthrazit</td><td>249,90 €</td><td>14</td><td><span class="status green">Aktiv</span></td><td><div class="button-row"><a class="btn small secondary" href="products.html">Bearbeiten</a><a class="btn small danger" href="products.html">Löschen</a></div></td></tr>
-        <tr><td>GM-1003</td><td>Lederschuh Noir</td><td>Eleganter Lederschuh</td><td>129,90 €</td><td>0</td><td><span class="status red">Leer</span></td><td><div class="button-row"><a class="btn small secondary" href="products.html">Bearbeiten</a><a class="btn small danger" href="products.html">Löschen</a></div></td></tr></tbody></table>
+        <table class="clean-table"><thead><tr><th>ID</th><th>Name</th><th>Beschreibung</th><th>Preis</th><th>Bestand</th><th>Kategorie</th><th>Status</th><th>Aktion</th></tr></thead>
+        <tbody id="adminProductsTableBody">
+          <!-- Dynamisch geladen -->
+        </tbody></table>
       </div>
       <aside class="summary-card">
-        <h3>Produkt anlegen</h3>
-        <div class="field" style="margin-top:14px"><label>Produkt-ID</label><input name="newProductId" placeholder="GM-1007"></div>
-        <div class="field" style="margin-top:14px"><label>Name</label><input placeholder="Produktname"></div>
-        <div class="field" style="margin-top:12px"><label>Beschreibung</label><textarea rows="3" placeholder="Kurze Produktbeschreibung"></textarea></div>
-        <div class="field" style="margin-top:12px"><label>Preis</label><input placeholder="0,00 €"></div>
-        <div class="field" style="margin-top:12px"><label>Menge</label><input placeholder="0"></div>
-        <a class="btn" href="products.html" style="width:100%;margin-top:16px">Speichern</a>
-        <p class="interface-note">Erstellen, Bearbeiten und Löschen bleiben bewusst als einfache UI-Schnittstellen vorbereitet.</p>
+        <h3 id="formTitle">Produkt anlegen</h3>
+        <div class="field" id="formProductIdField" style="margin-top:14px; display: none;"><label>Produkt-ID</label><input id="formProductId" readonly style="background:var(--border);color:var(--muted)"></div>
+        <div class="field" style="margin-top:14px"><label>Name</label><input id="formProductName" placeholder="Produktname"></div>
+        <div class="field" style="margin-top:12px"><label>Beschreibung</label><textarea id="formProductDescription" rows="3" placeholder="Kurze Produktbeschreibung"></textarea></div>
+        <div class="field" style="margin-top:12px"><label>Preis (€)</label><input id="formProductPrice" placeholder="249.90"></div>
+        <div class="field" style="margin-top:12px"><label>Menge</label><input id="formProductQuantity" placeholder="10"></div>
+        <div class="field" style="margin-top:12px">
+          <label>Kategorie</label>
+          <select id="formProductCategory" style="width:100%;padding:10px;background:var(--card-bg);border:1px solid var(--border);border-radius:6px;color:var(--text)">
+            <option value="anzuege">Anzüge</option>
+            <option value="hemden">Hemden</option>
+            <option value="schuhe">Schuhe</option>
+            <option value="zubehoer">Zubehör</option>
+            <option value="pflege">Pflege</option>
+          </select>
+        </div>
+        <button class="btn" id="saveProductBtn" style="width:100%;margin-top:16px;cursor:pointer">Speichern</button>
+        <button class="btn secondary" id="cancelEditBtn" style="width:100%;margin-top:8px;cursor:pointer;display:none">Abbrechen</button>
+        <p class="interface-note" style="margin-top:14px">Erstellen, Bearbeiten und Löschen werden über den Administrator-Account abgewickelt.</p>
       </aside>
     </div>
   </section>
@@ -93,5 +105,6 @@
   </div>
 </footer>
 
+<script src="../../js/admin-products.js"></script>
 </body>
 </html>

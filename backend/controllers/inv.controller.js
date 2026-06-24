@@ -19,7 +19,8 @@ async function getProducts(req, res, next) {
   try {
     const query = req.query.q || req.query.search || req.query.name;
     const available = req.query.available === "true" ? true : req.query.available === "false" ? false : undefined;
-    const result = await invService.searchProducts({ query, available });
+    const category = req.query.category;
+    const result = await invService.searchProducts({ query, available, category });
     res.status(200).json(result.rows);
   } catch (error) {
     next(error);
@@ -43,7 +44,7 @@ async function getProduct(req, res, next) {
 
 async function createProduct(req, res, next) {
   try {
-    const { name, description, price, available_quantity } = req.body;
+    const { name, description, price, available_quantity, category } = req.body;
 
     if (!name || price === undefined) {
       const error = new Error("name and price are required");
@@ -55,7 +56,8 @@ async function createProduct(req, res, next) {
       name,
       description,
       price: Number(price),
-      available_quantity: Number(available_quantity) || 0
+      available_quantity: Number(available_quantity) || 0,
+      category
     });
 
     res.status(201).json(created);
@@ -68,7 +70,7 @@ async function updateProduct(req, res, next) {
   try {
     const productId = requirePositiveInteger(req.params.id, "Product ID");
     const fields = {};
-    const allowed = ["name", "description", "price", "available_quantity"];
+    const allowed = ["name", "description", "price", "available_quantity", "category"];
 
     for (const key of allowed) {
       if (req.body[key] !== undefined) {
@@ -130,7 +132,10 @@ async function addToCart(req, res, next) {
       return res.status(404).json({ error: "Produkt nicht gefunden" });
     }
 
-    if (product.available_quantity < quantity) {
+    const existingCartItem = await invService.findCartItem(userId, productId);
+    const totalNewQuantity = (existingCartItem ? existingCartItem.quantity : 0) + quantity;
+
+    if (product.available_quantity < totalNewQuantity) {
       return res.status(400).json({ error: "Produkt ist nicht in ausreichender Menge verfügbar" });
     }
 
@@ -177,8 +182,10 @@ async function checkout(req, res, next) {
     const totalPrice = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
     const orderItems = cartItems.map((item) => ({
       product_id: item.product_id,
+      name: item.name,
       quantity: item.quantity,
-      price: item.price
+      price: item.price,
+      price_at_purchase: item.price
     }));
 
     const { orderId } = await invService.checkoutCart(userId, orderItems, totalPrice);

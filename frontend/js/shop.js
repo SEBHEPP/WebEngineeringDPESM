@@ -3,7 +3,10 @@ const USER_ID = 1;
 async function apiRequest(method, path, body) {
   const options = {
     method,
-    headers: { "Content-Type": "application/json" }
+    headers: {
+      "Content-Type": "application/json",
+      "x-user-id": String(USER_ID)
+    }
   };
 
   if (body !== undefined) {
@@ -41,11 +44,12 @@ function formatPrice(value) {
 }
 
 function createProductCard(product) {
+  const prefix = window.location.pathname.includes("/pages/") ? "" : "pages/shop/";
   return `
     <article class="product-card" id="product-${product.id}">
       <div class="image-placeholder"></div>
       <div class="card-body">
-        <a href="product-detail.html?id=${product.id}"><h3>${product.name}</h3></a>
+        <a href="${prefix}product-detail.html?id=${product.id}"><h3>${product.name}</h3></a>
         <p>Produkt-ID ${product.id} · ${product.description || "Keine Beschreibung"}</p>
         <span class="status ${product.available_quantity > 0 ? "green" : "red"}">${product.available_quantity > 0 ? "Auf Lager" : "Nicht verfügbar"}</span>
         <div class="price">${formatPrice(Number(product.price))}</div>
@@ -72,8 +76,11 @@ async function renderProductsPage() {
 
   const searchInput = document.querySelector("input[name='q']");
   const productIdInput = document.querySelector("input[name='productId']");
+  const availableOnly = document.getElementById("products-available-only");
+
   const query = getQueryParam("q") || searchInput?.value?.trim();
   const productId = getQueryParam("productId") || productIdInput?.value?.trim();
+  const category = productGrid.dataset.category;
 
   let products = [];
   try {
@@ -83,12 +90,34 @@ async function renderProductsPage() {
     } else {
       const params = new URLSearchParams();
       if (query) params.set("q", query);
+      if (category) params.set("category", category);
+      if (availableOnly && availableOnly.checked) params.set("available", "true");
       const path = `/inv/products${params.toString() ? `?${params.toString()}` : ""}`;
       products = await apiGet(path);
     }
   } catch (error) {
     productGrid.innerHTML = `<div class="interface-note">${error.message}</div>`;
     return;
+  }
+
+  // Frontend Sorting
+  const sortUp = document.getElementById("products-price-up") || 
+                 document.getElementById("anzuege-price-up") || 
+                 document.getElementById("hemden-price-up") || 
+                 document.getElementById("schuhe-price-up") || 
+                 document.getElementById("zubehoer-price-up") || 
+                 document.getElementById("pflege-price-up");
+  const sortDown = document.getElementById("products-price-down") || 
+                   document.getElementById("anzuege-price-down") || 
+                   document.getElementById("hemden-price-down") || 
+                   document.getElementById("schuhe-price-down") || 
+                   document.getElementById("zubehoer-price-down") || 
+                   document.getElementById("pflege-price-down");
+
+  if (sortUp && sortUp.checked) {
+    products.sort((a, b) => Number(a.price) - Number(b.price));
+  } else if (sortDown && sortDown.checked) {
+    products.sort((a, b) => Number(b.price) - Number(a.price));
   }
 
   productGrid.innerHTML = products.length
@@ -100,6 +129,25 @@ async function renderProductsPage() {
       addToCart(Number(button.dataset.productId));
     });
   });
+
+  // Bind change listeners to sorting radio buttons if present
+  const sortRadios = document.querySelectorAll("input[type='radio'][name^='sort-']");
+  sortRadios.forEach((radio) => {
+    if (!radio.dataset.listenerAdded) {
+      radio.dataset.listenerAdded = "true";
+      radio.addEventListener("change", () => {
+        renderProductsPage();
+      });
+    }
+  });
+
+  // Bind change listener to availability checkbox if present
+  if (availableOnly && !availableOnly.dataset.listenerAdded) {
+    availableOnly.dataset.listenerAdded = "true";
+    availableOnly.addEventListener("change", () => {
+      renderProductsPage();
+    });
+  }
 
   if (searchInput) {
     searchInput.addEventListener("keydown", (event) => {
