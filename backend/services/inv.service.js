@@ -1,6 +1,6 @@
 const db = require("../config/db");
 
-async function searchProducts({ query, available, category }) {
+async function searchProducts({ query, available }) {
   const where = [];
   const params = [];
 
@@ -14,27 +14,22 @@ async function searchProducts({ query, available, category }) {
     where.push("available_quantity > $" + params.length);
   }
 
-  if (category) {
-    params.push(category);
-    where.push("category = $" + params.length);
-  }
-
-  const sql = `SELECT id, name, description, price, available_quantity, category, created_at FROM products ${where.length ? "WHERE " + where.join(" AND ") : ""} ORDER BY id ASC`;
+  const sql = `SELECT id, name, description, price, available_quantity, created_at FROM products ${where.length ? "WHERE " + where.join(" AND ") : ""} ORDER BY id ASC`;
   return db.query(sql, params);
 }
 
 async function getProductById(productId) {
   const result = await db.query(
-    "SELECT id, name, description, price, available_quantity, category, created_at FROM products WHERE id = $1",
+    "SELECT id, name, description, price, available_quantity, created_at FROM products WHERE id = $1",
     [productId]
   );
   return result.rows[0] || null;
 }
 
-async function createProduct({ name, description, price, available_quantity, category }) {
+async function createProduct({ name, description, price, available_quantity }) {
   const result = await db.query(
-    "INSERT INTO products (name, description, price, available_quantity, category) VALUES ($1, $2, $3, $4, $5) RETURNING id, name, description, price, available_quantity, category, created_at",
-    [name, description || null, price, available_quantity || 0, category || null]
+    "INSERT INTO products (name, description, price, available_quantity) VALUES ($1, $2, $3, $4) RETURNING id, name, description, price, available_quantity, created_at",
+    [name, description || null, price, available_quantity || 0]
   );
   return result.rows[0];
 }
@@ -51,7 +46,7 @@ async function updateProduct(productId, fields) {
   values.push(productId);
 
   const result = await db.query(
-    `UPDATE products SET ${setClauses.join(", ")} WHERE id = $${values.length} RETURNING id, name, description, price, available_quantity, category, created_at`,
+    `UPDATE products SET ${setClauses.join(", ")} WHERE id = $${values.length} RETURNING id, name, description, price, available_quantity, created_at`,
     values
   );
 
