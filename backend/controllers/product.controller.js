@@ -1,0 +1,220 @@
+// Felix
+const db = require("../config/db");
+
+function createError(statusCode, message) {
+  const error = new Error(message);
+  error.statusCode = statusCode;
+  return error;
+}
+
+function normalizeId(id, fieldName = "id") {
+  const normalizedId = Number(id);
+
+  if (!Number.isInteger(normalizedId) || normalizedId <= 0) {
+    throw createError(400, `valid ${fieldName} is required`);
+  }
+
+  return normalizedId;
+}
+
+function normalizeText(value, fieldName) {
+  if (!value || typeof value !== "string" || value.trim().length === 0) {
+    throw createError(400, `${fieldName} is required`);
+  }
+
+  return value.trim();
+}
+
+function normalizePrice(value) {
+  const price = Number(value);
+
+  if (!Number.isFinite(price) || price < 0) {
+    throw createError(400, "valid price is required");
+  }
+
+  return price;
+}
+
+function normalizeQuantity(value) {
+  const quantity = Number(value);
+
+  if (!Number.isInteger(quantity) || quantity < 0) {
+    throw createError(400, "valid availableQuantity is required");
+  }
+
+  return quantity;
+}
+
+function toProduct(row) {
+  return {
+    id: row.id,
+    name: row.name,
+    description: row.description,
+    price: Number(row.price),
+    availableQuantity: row.available_quantity,
+    createdAt: row.created_at
+  };
+}
+
+async function listProducts(req, res, next) {
+  try {
+    const params = [];
+    const whereParts = [];
+    const search = req.query.q || req.query.search;
+    const sort = req.query.sort;
+
+    if (search) {
+      params.push(`%${String(search).trim()}%`);
+      whereParts.push(`(name ILIKE $${params.length} OR description ILIKE $${params.length})`);
+    }
+
+    if (req.query.minPrice) {
+      params.push(normalizePrice(req.query.minPrice));
+      whereParts.push(`price >= $${params.length}`);
+    }
+
+    if (req.query.maxPrice) {
+      params.push(normalizePrice(req.query.maxPrice));
+      whereParts.push(`price <= $${params.length}`);
+    }
+
+    const limit = req.query.limit ? Math.min(normalizeQuantity(req.query.limit), 100) : 50;
+    const orderBy = sort === "price_desc"
+      ? "price DESC, id ASC"
+      : sort === "price_asc"
+        ? "price ASC, id ASC"
+        : "id ASC";
+
+    params.push(limit);
+
+    const whereSql = whereParts.length > 0 ? `WHERE ${whereParts.join(" AND ")}` : "";
+    const result = await db.query(
+      `SELECT id, name, description, price, available_quantity, created_at
+       FROM products
+       ${whereSql}
+       ORDER BY ${orderBy}
+       LIMIT $${params.length}`,
+      params
+    );
+
+    res.status(200).json({
+      products: result.rows.map(toProduct)
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function getProductById(req, res, next) {
+  try {
+    const productId = normalizeId(req.params.id, "productId");
+    const result = await db.query(
+      "SELECT id, name, description, price, available_quantity, created_at FROM products WHERE id = $1",
+      [productId]
+    );
+    const product = result.rows[0];
+
+    if (!product) {
+      throw createError(404, "product not found");
+    }
+
+    res.status(200).json({
+      product: toProduct(product)
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function createProduct(req, res, next) {
+  try {
+    const name = normalizeText(req.body.name, "name");
+    const description = req.body.description ? String(req.body.description).trim() : null;
+    const price = normalizePrice(req.body.price);
+    const availableQuantity = normalizeQuantity(req.body.availableQuantity ?? req.body.available_quantity ?? 0);
+
+    const result = await db.query(
+      `INSERT INTO products (name, description, price, available_quantity)
+       VALUES ($1, $2, $3, $4)
+       RETURNING id, name, description, price, available_quantity, created_at`,
+      [name, description, price, availableQuantity]
+    );
+
+    res.status(201).json({
+      message: "product created",
+      product: toProduct(result.rows[0])
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function updateProduct(req, res, next) {
+  try {
+    const productId = normalizeId(req.params.id, "productId");
+    const oldProductResult = await db.query(
+      "SELECT id, name, description, price, available_quantity, created_at FROM products WHERE id = $1",
+      [productId]
+    );
+    const oldProduct = oldProductResult.rows[0];
+
+    if (!oldProduct) {
+      throw createError(404, "product not found");
+    }
+
+    const name = req.body.name !== undefined ? normalizeText(req.body.name, "name") : oldProduct.name;
+    const description = req.body.description !== undefined ? String(req.body.description).trim() : oldProduct.description;
+    const price = req.body.price !== undefined ? normalizePrice(req.body.price) : oldProduct.price;
+    const availableQuantityValue = req.body.availableQuantity ?? req.body.available_quantity;
+    const availableQuantity = availableQuantityValue !== undefined
+      ? normalizeQuantity(availableQuantityValue)
+      : oldProduct.available_quantity;
+
+    const result = await db.query(
+      `UPDATE products
+       SET name = $1, description = $2, price = $3, available_quantity = $4
+       WHERE id = $5
+       RETURNING id, name, description, price, available_quantity, created_at`,
+      [name, description, price, availableQuantity, productId]
+    );
+
+    res.status(200).json({
+      message: "product updated",
+      product: toProduct(result.rows[0])
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function deleteProduct(req, res, next) {
+  try {
+    const productId = normalizeId(req.params.id, "productId");
+    const result = await db.query(
+      `DELETE FROM products
+       WHERE id = $1
+       RETURNING id, name, description, price, available_quantity, created_at`,
+      [productId]
+    );
+    const product = result.rows[0];
+
+    if (!product) {
+      throw createError(404, "product not found");
+    }
+
+    res.status(200).json({
+      message: "product deleted",
+      product: toProduct(product)
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+module.exports = {
+  createProduct,
+  deleteProduct,
+  getProductById,
+  listProducts,
+  updateProduct
+};
