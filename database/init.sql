@@ -49,16 +49,6 @@ CREATE TABLE wishlist_permissions (
     PRIMARY KEY (wishlist_id, user_id)
 );
 
--- WARENKORB
-CREATE TABLE cart_items (
-    id SERIAL PRIMARY KEY,
-    user_id INT REFERENCES users(id) ON DELETE CASCADE,
-    product_id INT REFERENCES products(id) ON DELETE CASCADE,
-    quantity INT NOT NULL DEFAULT 1,
-    added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE (user_id, product_id)
-);
-
 -- EINKAUFSHISTORIE (INV-7)
 -- Eine Historie der persönlichen Einkäufe soll dargestellt werden können
 CREATE TABLE orders (
