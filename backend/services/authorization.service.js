@@ -24,6 +24,8 @@ const ACTION_ALIASES = {
   loeschen: "delete",
   "löschen": "delete",
   manage_permissions: "manage_permissions",
+  manage_users: "manage_users",
+  nutzer_verwalten: "manage_users",
   purchase: "buy",
   read: "read",
   remove: "delete",
