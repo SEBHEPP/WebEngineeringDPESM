@@ -75,3 +75,70 @@ async function getSession() {
     };
   }
 }
+
+function createFrontendLink(loginHref, target) {
+  if (loginHref.includes("pages/auth/")) {
+    return `pages/${target}`;
+  }
+
+  return `../${target}`;
+}
+
+function createNavLink(text, href) {
+  const link = document.createElement("a");
+  link.textContent = text;
+  link.href = href;
+
+  return link;
+}
+
+function createLogoutButton() {
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "nav-logout";
+  button.textContent = "Abmelden";
+
+  button.addEventListener("click", async () => {
+    try {
+      await apiRequest("/auth/logout", {
+        method: "POST"
+      });
+    } finally {
+      window.location.href = window.location.pathname.includes("/pages/")
+        ? "../../index.html"
+        : "index.html";
+    }
+  });
+
+  return button;
+}
+
+async function updateNavigation() {
+  const navActions = document.querySelector(".nav-actions");
+  if (!navActions) return;
+
+  const loginLink = navActions.querySelector('a[href$="login.html"]');
+  if (!loginLink) return;
+
+  const session = await getSession();
+  if (!session.authenticated || !session.user) return;
+
+  const profileLink = createNavLink(
+    "Profil",
+    createFrontendLink(loginLink.getAttribute("href"), "wishlist/wishlists.html")
+  );
+  const logoutButton = createLogoutButton();
+
+  loginLink.replaceWith(profileLink, logoutButton);
+
+  if (session.user.isAdmin === true) {
+    const adminLink = createNavLink(
+      "Admin-Dashboard",
+      createFrontendLink(loginLink.getAttribute("href"), "admin/dashboard.html")
+    );
+
+    profileLink.after(adminLink);
+  }
+}
+
+document.addEventListener("DOMContentLoaded", updateNavigation);

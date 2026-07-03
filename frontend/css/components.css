@@ -6,6 +6,11 @@
 .btn:hover { background: var(--brown); border-color: var(--brown); transform: translateY(-1px); }
 .btn.secondary { background: transparent; color: var(--brown-dark); }
 .btn.secondary:hover { background: var(--cream); }
+.nav-logout {
+  background: transparent; border: 0; color: var(--ink-soft); cursor: pointer; font: inherit; font-size: .74rem;
+  font-weight: 800; letter-spacing: .08em; padding: 0; text-transform: uppercase;
+}
+.nav-logout:hover { color: var(--brown-dark); }
 .header-search { align-items: center; display: flex; justify-content: flex-end; position: relative; width: 38px; }
 .header-search::before { content: "⌕"; color: var(--ink-soft); font-size: 1.2rem; position: absolute; right: 10px; z-index: 2; }
 .header-search input {
