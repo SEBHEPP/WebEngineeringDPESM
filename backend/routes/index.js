@@ -7,6 +7,7 @@ const healthRoutes = require("./health.routes");
 const orderRoutes = require("./order.routes");
 const productRoutes = require("./product.routes");
 const userRoutes = require("./user.routes");
+const wishlistRoutes = require("./wishlist.routes");
 
 const router = express.Router();
 
@@ -17,5 +18,6 @@ router.use("/health", healthRoutes);
 router.use("/orders", orderRoutes);
 router.use("/products", productRoutes);
 router.use("/users", userRoutes);
+router.use("/wishlists", wishlistRoutes);
 
 module.exports = router;
