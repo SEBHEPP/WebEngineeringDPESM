@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- Elias -->
 <html lang="de">
 <head>
   <meta charset="UTF-8">
@@ -37,19 +38,18 @@
   <section class="page-hero"><div class="container"><p class="eyebrow">Wunschlisten</p><h1>Meine Wunschlisten</h1><p class="lead">Listen erstellen, Produkte speichern und mit anderen Nutzern teilen.</p></div></section>
   <section class="section" style="padding-top:26px">
     <div class="container wishlist-layout">
-      <div class="products-grid">
+      <div class="products-grid" id="wishlistGrid">
         <article class="product-card"><div class="image-placeholder"></div><div class="card-body"><a href="wishlist-detail.html"><h3>Business Outfit</h3></a><p>ID WL-2001 · Anzug, Hemd und Schuhe. Besitzer: U-1001.</p><span class="status green">Besitzer</span><div class="button-row" style="margin-top:14px"><a class="btn small secondary" href="wishlist-detail.html">Öffnen</a><a class="btn small danger" href="wishlists.html">Löschen</a></div></div></article>
         <article class="product-card"><div class="image-placeholder"></div><div class="card-body"><a href="wishlist-detail.html"><h3>Pflege Set</h3></a><p>ID WL-2002 · Produkte für Bart und Details. Berechtigung: Lesen.</p><span class="status">Lesen</span><div class="button-row" style="margin-top:14px"><a class="btn small secondary" href="wishlist-detail.html">Öffnen</a></div></div></article>
       </div>
-      <aside class="summary-card">
+      <form class="summary-card" id="wishlistForm">
         <h3>Neue Liste</h3>
-        <div class="field" style="margin-top:16px"><label>Wishlist-ID</label><input name="wishlistId" placeholder="WL-2003"></div>
-        <div class="field" style="margin-top:16px"><label>Name</label><input placeholder="Name der Wunschliste"></div>
-        <div class="field" style="margin-top:12px"><label>Beschreibung</label><textarea rows="4" placeholder="Beschreibung"></textarea></div>
-        <div class="field" style="margin-top:12px"><label>Besitzer</label><input placeholder="U-1001"></div>
-        <a class="btn" href="wishlist-detail.html" style="width:100%;margin-top:16px">Wunschliste erstellen</a>
+        <div class="field" style="margin-top:16px"><label>Name</label><input name="name" placeholder="Name der Wunschliste" required></div>
+        <div class="field" style="margin-top:12px"><label>Beschreibung</label><textarea name="description" rows="4" placeholder="Beschreibung"></textarea></div>
+        <button class="btn" type="submit" style="width:100%;margin-top:16px">Wunschliste erstellen</button>
+        <p class="session-hint" id="wishlistMessage">Neue Listen werden automatisch deinem Account als Besitzer zugeordnet.</p>
         <p class="interface-note">Eine Wunschliste enthält Name, Beschreibung, Produkte, Besitzer und Berechtigte.</p>
-      </aside>
+      </form>
     </div>
   </section>
 </main>
@@ -83,5 +83,7 @@
   </div>
 </footer>
 
+<script src="../../js/api.js"></script>
+<script src="../../js/wishlist.js"></script>
 </body>
 </html>

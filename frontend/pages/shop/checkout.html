@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- Elias -->
 <html lang="de">
 <head>
   <meta charset="UTF-8">
@@ -37,13 +38,13 @@
   <section class="page-hero"><div class="container"><p class="eyebrow">Checkout</p><h1>Kauf abschließen</h1><p class="lead">Kein echtes Bezahlsystem notwendig. Diese Seite dient als Kaufabschluss-Vorlage.</p></div></section>
   <section class="section" style="padding-top:26px">
     <div class="container checkout-grid">
-      <div class="table-card">
+      <form class="table-card" id="checkoutForm">
         <h3>Lieferdaten</h3>
         <div class="form-grid" style="margin-top:18px">
-          <div class="field"><label>Vorname</label><input placeholder="Max"></div>
-          <div class="field"><label>Nachname</label><input placeholder="Mustermann"></div>
-          <div class="field full"><label>E-Mail</label><input placeholder="max@example.de"></div>
-          <div class="field full"><label>Straße</label><input placeholder="Musterstraße 1"></div>
+          <div class="field"><label>Vorname</label><input name="firstName" placeholder="Max" required></div>
+          <div class="field"><label>Nachname</label><input name="lastName" placeholder="Mustermann" required></div>
+          <div class="field full"><label>E-Mail</label><input name="email" type="email" placeholder="max@example.de" required></div>
+          <div class="field full"><label>Straße</label><input name="street" placeholder="Musterstraße 1" required></div>
           <div class="field"><label>PLZ</label><input placeholder="12345"></div>
           <div class="field"><label>Ort</label><input placeholder="Musterstadt"></div>
           <div class="field full"><label>Land</label><select><option>Deutschland</option><option>Österreich</option><option>Schweiz</option></select></div>
@@ -52,17 +53,17 @@
         <div class="form-grid" style="margin-top:18px">
           <div class="field full"><label>Versandart</label><select><option>Standardversand · kostenlos</option><option>Expressversand · 9,90 €</option></select></div>
           <div class="field full"><label>Zahlungsart</label><select><option>Kreditkarte</option><option>PayPal</option><option>Kauf auf Rechnung</option></select></div>
-          <div class="field full"><label><input type="checkbox"> Ich akzeptiere die AGB und Widerrufsbelehrung.</label></div>
+          <div class="field full"><label><input name="terms" type="checkbox"> Ich akzeptiere die AGB und Widerrufsbelehrung.</label></div>
         </div>
-      </div>
+        <p class="session-hint" id="checkoutMessage">Beim Klick auf Kaufen wird der Bestand geprüft, reduziert und die Bestellung gespeichert.</p>
+      </form>
       <aside class="summary-card">
         <h3>Bestellung</h3>
-        <div class="cart-item"><div class="image-placeholder"></div><div><strong>Anzug Milano</strong><p>Größe M</p></div><strong>249,90 €</strong></div>
-        <div class="cart-item"><div class="image-placeholder"></div><div><strong>Lederschuh Noir</strong><p>Größe 43</p></div><strong>129,90 €</strong></div>
-        <div class="summary-line"><span>2 Artikel</span><strong>379,80 €</strong></div>
+        <div id="checkoutItems"></div>
+        <div class="summary-line"><span>Artikel</span><strong>Warenkorb</strong></div>
         <div class="summary-line"><span>Versand</span><strong>0,00 €</strong></div>
-        <div class="summary-total"><span>Gesamt</span><span>379,80 €</span></div>
-        <a class="btn" href="orders.html" style="width:100%">Kaufen</a>
+        <div class="summary-total"><span>Gesamt</span><span id="checkoutTotal">0,00 €</span></div>
+        <button class="btn" form="checkoutForm" type="submit" style="width:100%">Kaufen</button>
       </aside>
     </div>
   </section>
@@ -97,5 +98,7 @@
   </div>
 </footer>
 
+<script src="../../js/api.js"></script>
+<script src="../../js/cart.js"></script>
 </body>
 </html>

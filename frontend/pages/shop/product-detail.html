@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- Elias -->
 <html lang="de">
 <head>
   <meta charset="UTF-8">
@@ -45,12 +46,12 @@
           <div class="image-placeholder"></div>
         </div>
       </div>
-      <aside class="product-info text-card">
+      <aside class="product-info text-card" id="productDetail">
         <p class="eyebrow">Anzüge</p>
-        <h1>Anzug Milano</h1>
-        <p class="lead">Moderner Herrenanzug in Anthrazit mit klarer Schulterlinie, leicht tailliertem Sakko und zeitloser Silhouette.</p>
-        <div class="price" style="font-size:28px">249,90 €</div>
-        <p class="interface-note">Schnittstelle Inventarsystem: Produkt-ID <strong>GM-1001</strong>, verfügbarer Bestand <strong>14</strong>.</p>
+        <h1 data-product-name>Anzug Milano</h1>
+        <p class="lead" data-product-description>Moderner Herrenanzug in Anthrazit mit klarer Schulterlinie, leicht tailliertem Sakko und zeitloser Silhouette.</p>
+        <div class="price" data-product-price style="font-size:28px">249,90 €</div>
+        <p class="interface-note">Schnittstelle Inventarsystem: Produkt-ID <strong data-product-id>GM-1001</strong>, verfügbarer Bestand <strong data-product-stock>14</strong>.</p>
         <div class="option-group">
           <div class="option-title">Größe</div>
           <div class="option-row"><span class="option">S</span><span class="option active">M</span><span class="option">L</span><span class="option">XL</span></div>
@@ -60,11 +61,11 @@
           <div class="option-row"><span class="option active">Anthrazit</span><span class="option">Braun</span><span class="option">Schwarz</span></div>
         </div>
         <div style="display:flex;gap:12px;margin-top:28px;flex-wrap:wrap">
-          <a class="btn" href="cart.html">In den Warenkorb</a>
+          <button class="btn" data-add-cart type="button">In den Warenkorb</button>
           <a class="btn secondary" href="../wishlist/wishlists.html">Zur Wunschliste</a>
         </div>
         <div class="info-list">
-          <div><span>Verfügbarkeit</span><strong>Auf Lager</strong></div>
+          <div><span>Verfügbarkeit</span><strong data-product-status>Auf Lager</strong></div>
           <div><span>Versand</span><strong>2-4 Werktage</strong></div>
           <div><span>Material</span><strong>100 % Schurwolle</strong></div>
           <div><span>Rückgabe</span><strong>30 Tage</strong></div>
@@ -104,5 +105,7 @@
   </div>
 </footer>
 
+<script src="../../js/api.js"></script>
+<script src="../../js/products.js"></script>
 </body>
 </html>

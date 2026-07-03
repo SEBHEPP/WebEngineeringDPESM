@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- Elias -->
 <html lang="de">
 <head>
   <meta charset="UTF-8">
@@ -34,15 +35,21 @@
 
 
 <main class="form-page">
-  <form class="form">
+  <div class="form">
     <p class="eyebrow">Login-Link</p>
     <h1>Code anfordern</h1>
     <p class="lead" style="font-size:15px">Der User erhält einen einmaligen Code oder Login-Link per E-Mail.</p>
-    <label>E-Mail</label><input type="email" placeholder="name@example.de">
-    <label>Einmal-Code</label><input type="text" placeholder="123456">
-    <a class="btn" href="login.html">Code senden</a>
-    <p class="session-hint">Der Code funktioniert später wie ein einmaliges Passwort. Der E-Mail-Link meldet ebenfalls einmalig an.</p>
-  </form>
+    <form id="magicRequestForm">
+      <label>E-Mail</label><input name="email" type="email" placeholder="name@example.de" required>
+      <button class="btn" type="submit">Code senden</button>
+    </form>
+    <form id="magicVerifyForm">
+      <label>E-Mail</label><input name="email" type="email" placeholder="name@example.de" required>
+      <label>Einmal-Code</label><input name="code" type="text" placeholder="123456" required>
+      <button class="btn secondary" type="submit">Mit Code anmelden</button>
+    </form>
+    <p class="session-hint" id="authMessage">Der Code funktioniert später wie ein einmaliges Passwort. Der E-Mail-Link meldet ebenfalls einmalig an.</p>
+  </div>
 </main>
 
 
@@ -74,5 +81,7 @@
   </div>
 </footer>
 
+<script src="../../js/api.js"></script>
+<script src="../../js/auth.js"></script>
 </body>
 </html>

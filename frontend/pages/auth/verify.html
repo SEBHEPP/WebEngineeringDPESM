@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- Elias -->
 <html lang="de">
 <head>
   <meta charset="UTF-8">
@@ -38,11 +39,11 @@
     <p class="eyebrow">Verifizierung</p>
     <h1>E-Mail bestätigen</h1>
     <p class="lead" style="font-size:15px">Nach der Registrierung erhält der User einen Bestätigungslink. Diese Seite zeigt den Verifizierungsstatus.</p>
-    <div class="info-list">
+    <div id="verifyStatus"><div class="info-list">
       <div><span>User-ID</span><strong>U-1002</strong></div>
       <div><span>Konto-Status</span><strong>Wartet auf Bestätigung</strong></div>
       <div><span>E-Mail</span><strong>neu@example.de</strong></div>
-    </div>
+    </div></div>
     <a class="btn" href="login.html">Zum Login</a>
   </div>
 </main>
@@ -76,5 +77,7 @@
   </div>
 </footer>
 
+<script src="../../js/api.js"></script>
+<script src="../../js/auth.js"></script>
 </body>
 </html>

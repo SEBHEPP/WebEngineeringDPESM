@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- Elias -->
 <html lang="de">
 <head>
   <meta charset="UTF-8">
@@ -36,15 +37,16 @@
 <main>
   <section class="page-hero"><div class="container"><p class="eyebrow">Wunschliste · WL-2001</p><h1>Business Outfit</h1><p class="lead">Detailansicht mit Produkten, Berechtigten, Bearbeitung und Teilfunktion.</p></div></section>
   <section class="section" style="padding-top:26px">
-    <div class="container wishlist-layout">
+    <div class="container wishlist-layout" id="wishlistDetailPage">
       <div class="table-card">
         <h3>Produkte verwalten</h3>
         <div class="admin-tools">
-          <div class="form-grid">
+          <form class="form-grid" id="wishlistAddProductForm">
             <div class="field"><label>Produkt-ID hinzufügen</label><input name="addProductId" placeholder="GM-1002"></div>
             <div class="field"><label>Listenname</label><input name="wishlistName" value="Business Outfit"></div>
             <div class="field full"><label>Beschreibung</label><textarea rows="3">Anzug, Hemd und Schuhe für Business-Termine.</textarea></div>
-          </div>
+            <div class="field full"><button class="btn small secondary" type="submit">Produkt hinzufügen</button></div>
+          </form>
           <div class="button-row"><a class="btn small secondary" href="wishlist-detail.html">Änderungen speichern</a><a class="btn small danger" href="wishlists.html">Wunschliste löschen</a></div>
         </div>
         <div class="cart-item"><div class="image-placeholder"></div><div><h3>Anzug Milano</h3><p>GM-1001 · Moderner Schnitt in Anthrazit.</p></div><div class="button-row"><strong>249,90 €</strong><a class="btn small danger" href="wishlist-detail.html">Entfernen</a></div></div>
@@ -52,10 +54,12 @@
       </div>
       <aside class="summary-card">
         <h3>Teilen</h3>
-        <div class="field" style="margin-top:16px"><label>User-ID oder E-Mail</label><input placeholder="user@example.de"></div>
-        <div class="field" style="margin-top:12px"><label>Berechtigung</label><select><option>Leseberechtigung</option><option>Schreibberechtigung</option><option>Besitzer</option></select></div>
-        <a class="btn" href="wishlist-detail.html" style="width:100%;margin-top:16px">Berechtigung setzen</a>
-        <div class="permission-list">
+        <form id="wishlistPermissionForm">
+          <div class="field" style="margin-top:16px"><label>User-ID</label><input name="userId" placeholder="2" required></div>
+          <div class="field" style="margin-top:12px"><label>Berechtigung</label><select name="role"><option value="read">Leseberechtigung</option><option value="write">Schreibberechtigung</option></select></div>
+          <button class="btn" type="submit" style="width:100%;margin-top:16px">Berechtigung setzen</button>
+        </form>
+        <div class="permission-list" id="wishlistPermissions">
           <div><span>U-1001 · Besitzer</span><a class="btn small secondary" href="wishlist-detail.html">Behalten</a></div>
           <div><span>U-1004 · Schreiben</span><a class="btn small danger" href="wishlist-detail.html">Entfernen</a></div>
           <div><span>U-1005 · Lesen</span><a class="btn small danger" href="wishlist-detail.html">Entfernen</a></div>
@@ -95,5 +99,7 @@
   </div>
 </footer>
 
+<script src="../../js/api.js"></script>
+<script src="../../js/wishlist.js"></script>
 </body>
 </html>

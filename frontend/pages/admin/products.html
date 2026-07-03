@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- Elias -->
 <html lang="de">
 <head>
   <meta charset="UTF-8">
@@ -40,26 +41,28 @@
       <div class="table-card">
         <div class="admin-tools">
           <h3>Produkt suchen</h3>
-          <div class="form-grid">
+          <form class="form-grid" id="adminProductSearchForm">
             <div class="field"><label>Produkt-ID</label><input name="productId" placeholder="GM-1001"></div>
             <div class="field"><label>Name oder Kategorie</label><input name="productQuery" placeholder="Anzug oder Schuhe"></div>
-          </div>
+            <div class="field"><label>&nbsp;</label><button class="btn" type="submit">Suchen</button></div>
+          </form>
           <p class="interface-note">Backend-Schnittstelle: gezielte Suche per ID und Produktsuche mit mindestens zwei Suchkriterien.</p>
         </div>
         <table class="clean-table"><thead><tr><th>ID</th><th>Name</th><th>Beschreibung</th><th>Preis</th><th>Bestand</th><th>Status</th><th>Aktion</th></tr></thead>
-        <tbody><tr><td>GM-1001</td><td>Anzug Milano</td><td>Moderner Schnitt in Anthrazit</td><td>249,90 €</td><td>14</td><td><span class="status green">Aktiv</span></td><td><div class="button-row"><a class="btn small secondary" href="products.html">Bearbeiten</a><a class="btn small danger" href="products.html">Löschen</a></div></td></tr>
+        <tbody id="adminProductsBody"><tr><td>GM-1001</td><td>Anzug Milano</td><td>Moderner Schnitt in Anthrazit</td><td>249,90 €</td><td>14</td><td><span class="status green">Aktiv</span></td><td><div class="button-row"><a class="btn small secondary" href="products.html">Bearbeiten</a><a class="btn small danger" href="products.html">Löschen</a></div></td></tr>
         <tr><td>GM-1003</td><td>Lederschuh Noir</td><td>Eleganter Lederschuh</td><td>129,90 €</td><td>0</td><td><span class="status red">Leer</span></td><td><div class="button-row"><a class="btn small secondary" href="products.html">Bearbeiten</a><a class="btn small danger" href="products.html">Löschen</a></div></td></tr></tbody></table>
       </div>
-      <aside class="summary-card">
+      <form class="summary-card" id="adminProductForm">
         <h3>Produkt anlegen</h3>
-        <div class="field" style="margin-top:14px"><label>Produkt-ID</label><input name="newProductId" placeholder="GM-1007"></div>
-        <div class="field" style="margin-top:14px"><label>Name</label><input placeholder="Produktname"></div>
-        <div class="field" style="margin-top:12px"><label>Beschreibung</label><textarea rows="3" placeholder="Kurze Produktbeschreibung"></textarea></div>
-        <div class="field" style="margin-top:12px"><label>Preis</label><input placeholder="0,00 €"></div>
-        <div class="field" style="margin-top:12px"><label>Menge</label><input placeholder="0"></div>
-        <a class="btn" href="products.html" style="width:100%;margin-top:16px">Speichern</a>
+        <div class="field" style="margin-top:14px"><label>Produkt-ID</label><input name="productId" placeholder="leer lassen für neu"></div>
+        <div class="field" style="margin-top:14px"><label>Name</label><input name="name" placeholder="Produktname" required></div>
+        <div class="field" style="margin-top:12px"><label>Beschreibung</label><textarea name="description" rows="3" placeholder="Kurze Produktbeschreibung"></textarea></div>
+        <div class="field" style="margin-top:12px"><label>Preis</label><input name="price" placeholder="0.00" required></div>
+        <div class="field" style="margin-top:12px"><label>Menge</label><input name="availableQuantity" placeholder="0" required></div>
+        <button class="btn" type="submit" style="width:100%;margin-top:16px">Speichern</button>
+        <p class="session-hint" id="adminProductMessage">Admin-CRUD nutzt geschützte Produkt-Endpunkte.</p>
         <p class="interface-note">Erstellen, Bearbeiten und Löschen bleiben bewusst als einfache UI-Schnittstellen vorbereitet.</p>
-      </aside>
+      </form>
     </div>
   </section>
 </main>
@@ -93,5 +96,7 @@
   </div>
 </footer>
 
+<script src="../../js/api.js"></script>
+<script src="../../js/products.js"></script>
 </body>
 </html>

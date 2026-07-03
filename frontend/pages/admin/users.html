@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- Elias -->
 <html lang="de">
 <head>
   <meta charset="UTF-8">
@@ -40,24 +41,26 @@
       <div class="table-card">
         <div class="admin-tools">
           <h3>User suchen</h3>
-          <div class="form-grid">
+          <form class="form-grid" id="adminUserSearchForm">
             <div class="field"><label>User-ID</label><input name="userId" placeholder="U-1001"></div>
-            <div class="field"><label>E-Mail</label><input name="userEmail" placeholder="kunde@example.de"></div>
-          </div>
+            <div class="field"><label>E-Mail</label><input name="email" placeholder="kunde@example.de"></div>
+            <div class="field"><label>&nbsp;</label><button class="btn" type="submit">Suchen</button></div>
+          </form>
           <p class="interface-note">Nur Admin-Bereich: gezielte Suche, Löschen, Sperren, Entsperren und Admin-Erstellung.</p>
         </div>
         <table class="clean-table"><thead><tr><th>ID</th><th>E-Mail</th><th>Rolle</th><th>Status</th><th>Konto</th><th>Aktion</th></tr></thead>
-        <tbody><tr><td>U-1000</td><td>admin@example.de</td><td>ADMIN</td><td><span class="status green">Verifiziert</span></td><td><span class="status green">Aktiv</span></td><td><div class="button-row"><a class="btn small secondary" href="users.html">Sperren</a></div></td></tr>
+        <tbody id="adminUsersBody"><tr><td>U-1000</td><td>admin@example.de</td><td>ADMIN</td><td><span class="status green">Verifiziert</span></td><td><span class="status green">Aktiv</span></td><td><div class="button-row"><a class="btn small secondary" href="users.html">Sperren</a></div></td></tr>
         <tr><td>U-1001</td><td>kunde@example.de</td><td>USER</td><td><span class="status green">Verifiziert</span></td><td><span class="status">Aktiv</span></td><td><div class="button-row"><a class="btn small secondary" href="users.html">Sperren</a><a class="btn small danger" href="users.html">Löschen</a></div></td></tr>
         <tr><td>U-1002</td><td>neu@example.de</td><td>USER</td><td><span class="status">Offen</span></td><td><span class="status red">Gesperrt</span></td><td><div class="button-row"><a class="btn small secondary" href="users.html">Entsperren</a><a class="btn small danger" href="users.html">Löschen</a></div></td></tr></tbody></table>
       </div>
-      <aside class="summary-card">
+      <form class="summary-card" id="adminCreateForm">
         <h3>Admin erstellen</h3>
-        <div class="field" style="margin-top:14px"><label>E-Mail</label><input placeholder="admin@example.de"></div>
-        <div class="field" style="margin-top:12px"><label>Passwort</label><input placeholder="Passwort"></div>
+        <div class="field" style="margin-top:14px"><label>E-Mail</label><input name="email" type="email" placeholder="admin@example.de" required></div>
+        <div class="field" style="margin-top:12px"><label>Passwort</label><input name="password" type="password" placeholder="Passwort" required></div>
         <div class="field" style="margin-top:12px"><label>Rolle</label><select><option>ADMIN</option><option>USER</option></select></div>
-        <a class="btn" href="users.html" style="width:100%;margin-top:16px">Admin erstellen</a>
-      </aside>
+        <button class="btn" type="submit" style="width:100%;margin-top:16px">Admin erstellen</button>
+        <p class="session-hint" id="adminUserMessage">Userverwaltung ist nur mit Admin-Session möglich.</p>
+      </form>
     </div>
   </section>
 </main>
@@ -91,5 +94,7 @@
   </div>
 </footer>
 
+<script src="../../js/api.js"></script>
+<script src="../../js/admin.js"></script>
 </body>
 </html>

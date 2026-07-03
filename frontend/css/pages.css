@@ -91,3 +91,5 @@
 .permission-list { display: grid; gap: 10px; margin-top: 16px; }
 .permission-list div { align-items: center; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; padding-bottom: 10px; }
 .session-hint { background: var(--cream); border: 1px solid var(--line); color: var(--muted); font-size: .86rem; margin-top: 18px; padding: 14px; }
+.session-hint.success { background: #e4eee6; color: var(--success); }
+.session-hint.error { background: #f2e2dd; color: #783529; }

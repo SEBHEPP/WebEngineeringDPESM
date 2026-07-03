@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- Elias -->
 <html lang="de">
 <head>
   <meta charset="UTF-8">
@@ -43,16 +44,17 @@
   </section>
   <section class="section" style="padding-top:26px">
     <div class="container cart-layout">
-      <div class="table-card">
+      <div class="table-card" id="cartItems">
         <div class="cart-item"><div class="image-placeholder"></div><div><h3>Anzug Milano</h3><p>Größe M · Anthrazit</p></div><strong>249,90 €</strong></div>
         <div class="cart-item"><div class="image-placeholder"></div><div><h3>Lederschuh Noir</h3><p>Größe 43 · Schwarz</p></div><strong>129,90 €</strong></div>
         <div class="cart-item"><div class="image-placeholder"></div><div><h3>Strickpullover Sand</h3><p>Produkt aktuell nicht verfügbar. Kauf wird später vom Inventarsystem blockiert.</p><span class="status red">Entfernen nötig</span></div><strong>79,90 €</strong></div>
       </div>
       <aside class="summary-card">
         <h3>Zusammenfassung</h3>
-        <div class="summary-line"><span>Zwischensumme verfügbarer Artikel</span><strong>379,80 €</strong></div>
+        <div class="summary-line"><span>Zwischensumme verfügbarer Artikel</span><strong id="cartSubtotal">0,00 €</strong></div>
         <div class="summary-line"><span>Versand</span><strong>0,00 €</strong></div>
-        <div class="summary-total"><span>Gesamt</span><span>379,80 €</span></div>
+        <div class="summary-line"><span>Artikel</span><strong id="cartCount">0 Artikel</strong></div>
+        <div class="summary-total"><span>Gesamt</span><span id="cartTotal">0,00 €</span></div>
         <a class="btn" href="checkout.html" style="width:100%">Zur Kasse</a>
       </aside>
     </div>
@@ -88,5 +90,7 @@
   </div>
 </footer>
 
+<script src="../../js/api.js"></script>
+<script src="../../js/cart.js"></script>
 </body>
 </html>
