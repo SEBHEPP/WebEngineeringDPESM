@@ -36,6 +36,8 @@ async function loadProducts(params = {}) {
 }
 
 function productCard(product, linkPrefix = "") {
+  if (typeof linkPrefix !== "string") linkPrefix = "";
+
   return `
     <article class="product-card">
       <div class="image-placeholder">${productImage(product)}</div>
@@ -105,7 +107,7 @@ function setupProductsPage() {
         });
       }
 
-      grid.innerHTML = products.length ? products.map(productCard).join("") : "<div class=\"empty-state\">Keine Produkte gefunden.</div>";
+      grid.innerHTML = products.length ? products.map((product) => productCard(product)).join("") : "<div class=\"empty-state\">Keine Produkte gefunden.</div>";
       setupProductButtons(grid, products);
     } catch (error) {
       grid.innerHTML = `<p class="session-hint error">${error.message}</p>`;
@@ -140,12 +142,17 @@ async function setupProductDetailPage() {
     const data = await apiRequest(`/products/${getParam("id") || 1}`);
     const product = data.product;
 
-    box.querySelector("[data-product-name]").textContent = product.name;
-    box.querySelector("[data-product-description]").textContent = product.description || "Keine Beschreibung vorhanden.";
-    box.querySelector("[data-product-price]").textContent = formatPrice(product.price);
-    box.querySelector("[data-product-stock]").textContent = product.availableQuantity;
-    box.querySelector("[data-product-status]").textContent = product.availableQuantity > 0 ? "Auf Lager" : "Nicht verfügbar";
-    box.querySelector("[data-product-id]").textContent = product.id;
+    const setText = (selector, value) => {
+      const element = box.querySelector(selector);
+      if (element) element.textContent = value;
+    };
+
+    setText("[data-product-name]", product.name);
+    setText("[data-product-description]", product.description || "Keine Beschreibung vorhanden.");
+    setText("[data-product-price]", formatPrice(product.price));
+    setText("[data-product-stock]", product.availableQuantity);
+    setText("[data-product-status]", product.availableQuantity > 0 ? "Auf Lager" : "Nicht verfügbar");
+    setText("[data-product-id]", product.id);
 
     const galleryMain = document.querySelector(".gallery-main");
     if (galleryMain) galleryMain.innerHTML = productImage(product);
