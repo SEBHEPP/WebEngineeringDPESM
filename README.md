@@ -200,6 +200,15 @@ http://localhost:1080
 
 Dort erscheinen später lokale Testmails, z. B. Registrierungslinks, Login-Codes oder Einkaufsbestätigungen.
 
+### Webshop-Testlogin
+
+Für die geschützten Admin- und Verwaltungsbereiche wird beim Zurücksetzen der Datenbank ein verifizierter Admin-User angelegt:
+
+```text
+E-Mail:    admin@webshop.dev
+Passwort:  admin1234
+```
+
 ### Container stoppen
 
 ```bash

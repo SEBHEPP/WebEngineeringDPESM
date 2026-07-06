@@ -12,6 +12,9 @@ CREATE TABLE users (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+INSERT INTO users (email, password_hash, is_verified, is_admin, is_blocked) VALUES
+('admin@webshop.dev', 'adminseed2026abcd:70d4ed84b9cf31c0a7e2f74b0929f2503ae906837d3b3ca31a041ca17b3747eb62da49ac5fbc1b428c524298d4cbd1a08b2ff46174decf4cfca68a5ddee3fc38', TRUE, TRUE, FALSE);
+
 -- INVENTARSYSTEM (PRODUKTE)
 -- Ein Produkt enthält mindestens folgende Angaben (ID, Name, Beschreibung, Preis, verfügbare Menge)
 CREATE TABLE products (
@@ -22,6 +25,14 @@ CREATE TABLE products (
     available_quantity INT NOT NULL DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+INSERT INTO products (name, description, price, available_quantity) VALUES
+('Anzug Milano', 'Moderner Schnitt in Anthrazit.', 249.90, 14),
+('Hemd Oxford', 'Klassisches Hemd fuer Business und Freizeit.', 59.90, 22),
+('Lederschuh Noir', 'Schlichter Schuh fuer elegante Looks.', 129.90, 10),
+('Guertel Cognac', 'Warmes Leder als dezenter Akzent.', 39.90, 18),
+('Pflegeset Barber', 'Kamm, Bartoel und Pflege fuer den Alltag.', 34.90, 25),
+('Strickpullover Sand', 'Warmer Look fuer gepflegte Casual Outfits.', 79.90, 0);
 
 -- WUNSCHLISTEN-SERVICE
 -- Eine Wunschliste hat mindestens folgende Informationen (Name, Beschreibung, enthaltene Produkte, Besitzer, Berechtigte).

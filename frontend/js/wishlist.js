@@ -73,15 +73,36 @@ function setupWishlistDetail() {
   const wishlistId = getParam("id");
   const addForm = document.getElementById("wishlistAddProductForm");
   const permissionForm = document.getElementById("wishlistPermissionForm");
-  const message = document.getElementById("wishlistDetailMessage");
+  let message = document.getElementById("wishlistDetailMessage");
+  let itemBox = document.getElementById("wishlistItems");
+  const permissionBox = document.getElementById("wishlistPermissions");
+
+  if (!message) {
+    message = document.createElement("p");
+    message.className = "session-hint";
+    message.id = "wishlistDetailMessage";
+    page.querySelector(".admin-tools")?.appendChild(message);
+  }
+
+  if (!itemBox) {
+    itemBox = document.createElement("div");
+    itemBox.id = "wishlistItems";
+    const tableCard = page.querySelector(".table-card");
+    tableCard.querySelectorAll(".cart-item").forEach((item) => item.remove());
+    tableCard.appendChild(itemBox);
+  }
+
+  if (permissionBox) {
+    permissionBox.innerHTML = "";
+  }
 
   async function render() {
     try {
       const data = await apiRequest(`/wishlists/${wishlistId}`);
       const wishlist = data.wishlist;
 
-      const title = document.getElementById("wishlistTitle");
-      const eyebrow = document.getElementById("wishlistEyebrow");
+      const title = document.getElementById("wishlistTitle") || document.querySelector(".page-hero h1");
+      const eyebrow = document.getElementById("wishlistEyebrow") || document.querySelector(".page-hero .eyebrow");
 
       if (title) title.textContent = wishlist.name;
       if (eyebrow) eyebrow.textContent = `Wunschliste · ${wishlist.id}`;
@@ -135,28 +156,42 @@ function setupWishlistDetail() {
     event.preventDefault();
     const productInput = addForm.productId || addForm.addProductId;
 
-    await apiRequest(`/wishlists/${wishlistId}/products`, {
-      method: "POST",
-      body: JSON.stringify({ productId: productInput.value })
-    });
-    addForm.reset();
-    render();
+    try {
+      await apiRequest(`/wishlists/${wishlistId}/products`, {
+        method: "POST",
+        body: JSON.stringify({ productId: productInput.value })
+      });
+      addForm.reset();
+      render();
+    } catch (error) {
+      setMessage(message, error.message, "error");
+    }
   });
 
   permissionForm?.addEventListener("submit", async (event) => {
     event.preventDefault();
-    await apiRequest(`/wishlists/${wishlistId}/permissions`, {
-      method: "POST",
-      body: JSON.stringify({
-        userId: permissionForm.userId.value,
-        role: permissionForm.role.value
-      })
-    });
-    permissionForm.reset();
-    render();
+    try {
+      await apiRequest(`/wishlists/${wishlistId}/permissions`, {
+        method: "POST",
+        body: JSON.stringify({
+          userId: permissionForm.userId.value,
+          role: permissionForm.role.value
+        })
+      });
+      permissionForm.reset();
+      render();
+    } catch (error) {
+      setMessage(message, error.message, "error");
+    }
   });
 
   if (!wishlistId) {
+    const title = document.getElementById("wishlistTitle") || document.querySelector(".page-hero h1");
+    const eyebrow = document.getElementById("wishlistEyebrow") || document.querySelector(".page-hero .eyebrow");
+
+    if (title) title.textContent = "Wunschliste";
+    if (eyebrow) eyebrow.textContent = "Wunschliste";
+
     setMessage(message, "Keine Wunschliste ausgewählt.", "error");
     return;
   }

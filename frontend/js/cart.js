@@ -9,6 +9,23 @@ function cartTotal(cart) {
   return cart.reduce((sum, item) => sum + Number(item.price) * item.quantity, 0);
 }
 
+function updateCartSummary(cart) {
+  const total = document.getElementById("cartTotal");
+  const subtotal = document.getElementById("cartSubtotal");
+  const count = document.getElementById("cartCount");
+  const checkoutLink = document.getElementById("checkoutLink");
+  const totalText = formatPrice(cartTotal(cart));
+  const itemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+  if (total) total.textContent = totalText;
+  if (subtotal) subtotal.textContent = totalText;
+  if (count) count.textContent = `${itemCount} Artikel`;
+  if (checkoutLink) {
+    checkoutLink.classList.toggle("disabled", cart.length === 0);
+    checkoutLink.setAttribute("aria-disabled", cart.length === 0 ? "true" : "false");
+  }
+}
+
 function renderCartPage() {
   const list = document.getElementById("cartItems");
   const total = document.getElementById("cartTotal");
@@ -39,9 +56,7 @@ function renderCartPage() {
     });
   });
 
-  if (total) total.textContent = formatPrice(cartTotal(cart));
-  if (subtotal) subtotal.textContent = formatPrice(cartTotal(cart));
-  if (count) count.textContent = `${cart.length} Artikel`;
+  updateCartSummary(cart);
 }
 
 function setupCheckoutPage() {
@@ -68,6 +83,13 @@ function setupCheckoutPage() {
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
 
+    const currentCart = getCart();
+
+    if (currentCart.length === 0) {
+      setMessage(message, "Dein Warenkorb ist leer.", "error");
+      return;
+    }
+
     if (!form.terms.checked) {
       setMessage(message, "Bitte akzeptiere die AGB.", "error");
       return;
@@ -77,7 +99,7 @@ function setupCheckoutPage() {
       const data = await apiRequest("/orders/checkout", {
         method: "POST",
         body: JSON.stringify({
-          items: getCart().map((item) => ({
+          items: currentCart.map((item) => ({
             productId: item.productId,
             quantity: item.quantity
           }))
@@ -86,6 +108,9 @@ function setupCheckoutPage() {
 
       saveCart([]);
       setMessage(message, `Bestellung #${data.order.id} wurde erstellt. E-Mail: ${data.confirmationEmail}`, "success");
+      window.setTimeout(() => {
+        window.location.href = "orders.html";
+      }, 900);
     } catch (error) {
       setMessage(message, error.message, "error");
     }

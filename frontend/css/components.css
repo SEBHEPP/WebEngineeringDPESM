@@ -6,6 +6,7 @@
 .btn:hover { background: var(--brown); border-color: var(--brown); transform: translateY(-1px); }
 .btn.secondary { background: transparent; color: var(--brown-dark); }
 .btn.secondary:hover { background: var(--cream); }
+.btn.disabled, .btn[aria-disabled="true"] { opacity: .45; pointer-events: none; }
 .nav-logout {
   background: transparent; border: 0; color: var(--ink-soft); cursor: pointer; font: inherit; font-size: .74rem;
   font-weight: 800; letter-spacing: .08em; padding: 0; text-transform: uppercase;
