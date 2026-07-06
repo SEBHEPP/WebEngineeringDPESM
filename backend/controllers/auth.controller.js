@@ -330,16 +330,30 @@ async function sendVerificationMail(user) {
   });
 }
 
-async function sendMagicCodeMail(user, code) {
+function createMagicLinkToken(user, jti) {
+  return signToken(
+    {
+      type: "magic_login",
+      userId: user.id,
+      email: user.email,
+      jti
+    },
+    MAGIC_CODE_MINUTES * 60
+  );
+}
+
+async function sendMagicCodeMail(user, code, magicUrl) {
   await sendMail({
     to: user.email,
-    subject: "Gentleman Shop - Magic Login Code",
-    text: `Dein Login-Code lautet: ${code}. Er ist ${MAGIC_CODE_MINUTES} Minuten gueltig.`,
+    subject: "Gentleman Shop - Magic Login",
+    text: `Dein Login-Code lautet: ${code}\n\nOder melde dich direkt ueber diesen Link an: ${magicUrl}\n\nCode und Link sind ${MAGIC_CODE_MINUTES} Minuten gueltig und koennen nur einmal verwendet werden.`,
     html: `
       <h2>Gentleman Shop</h2>
       <p>Dein einmaliger Login-Code lautet:</p>
       <h1>${code}</h1>
-      <p>Der Code ist ${MAGIC_CODE_MINUTES} Minuten gueltig.</p>
+      <p>Oder melde dich direkt an:</p>
+      <p><a href="${magicUrl}">Jetzt anmelden</a></p>
+      <p>Code und Link sind ${MAGIC_CODE_MINUTES} Minuten gueltig und koennen nur einmal verwendet werden.</p>
     `
   });
 }
@@ -542,15 +556,20 @@ async function requestMagicLogin(req, res, next) {
     removeExpiredMagicCodes();
 
     const code = String(crypto.randomInt(0, 1000000)).padStart(6, "0");
+    const jti = crypto.randomBytes(16).toString("hex");
     const expiresAt = Date.now() + MAGIC_CODE_MINUTES * 60 * 1000;
 
     magicCodes.set(email, {
       code,
+      jti,
       userId: user.id,
       expiresAt
     });
 
-    await sendMagicCodeMail(user, code);
+    const magicToken = createMagicLinkToken(user, jti);
+    const magicUrl = `${getAppBaseUrl()}/api/auth/magic/login?token=${encodeURIComponent(magicToken)}`;
+
+    await sendMagicCodeMail(user, code, magicUrl);
 
     res.status(200).json({
       message: "magic login code sent",
@@ -604,6 +623,51 @@ async function verifyMagicLogin(req, res, next) {
     });
   } catch (error) {
     next(error);
+  }
+}
+
+async function verifyMagicLoginLink(req, res) {
+  const appBaseUrl = getAppBaseUrl();
+
+  try {
+    const payload = verifyToken(req.query.token);
+
+    if (payload.type !== "magic_login") {
+      throw createError(401, "magic login link is invalid");
+    }
+
+    const entry = magicCodes.get(payload.email);
+
+    // Einmalig: Eintrag muss existieren und zur jti des Links passen (Code oder Link nur einmal nutzbar)
+    if (!entry || entry.jti !== payload.jti) {
+      throw createError(401, "magic login link is invalid or already used");
+    }
+
+    if (entry.expiresAt <= Date.now()) {
+      magicCodes.delete(payload.email);
+      throw createError(401, "magic login link is expired");
+    }
+
+    const user = await findUserById(entry.userId);
+
+    if (!user) {
+      throw createError(404, "user not found");
+    }
+
+    if (user.is_blocked) {
+      throw createError(403, "user is blocked");
+    }
+
+    if (!user.is_verified) {
+      throw createError(403, "email is not verified");
+    }
+
+    magicCodes.delete(payload.email);
+    setSessionCookie(res, user);
+
+    return res.redirect(`${appBaseUrl}/index.html`);
+  } catch (error) {
+    return res.redirect(`${appBaseUrl}/pages/auth/magic-login.html?error=link`);
   }
 }
 
@@ -662,5 +726,6 @@ module.exports = {
   requestMagicLogin,
   resendVerification,
   verifyEmail,
-  verifyMagicLogin
+  verifyMagicLogin,
+  verifyMagicLoginLink
 };

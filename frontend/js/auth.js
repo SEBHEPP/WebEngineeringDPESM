@@ -68,6 +68,10 @@ function setupMagicLogin() {
   const verifyForm = document.getElementById("magicVerifyForm");
   const message = document.getElementById("authMessage");
 
+  if (requestForm && getParam("error") === "link") {
+    setMessage(message, "Der Login-Link ist ungültig, abgelaufen oder wurde bereits verwendet. Fordere einen neuen an.", "error");
+  }
+
   requestForm?.addEventListener("submit", async (event) => {
     event.preventDefault();
 
