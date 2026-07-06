@@ -26,7 +26,7 @@
       <a href="pages/shop/pflege.html">Pflege</a>
     </nav>
     <div class="nav-actions">
-      <form class="header-search" action="pages/shop/search.html"><label class="sr-only" for="header-search-index">Suche</label><input id="header-search-index" type="search" placeholder="Produkte suchen" aria-label="Produkte suchen"></form>
+      <form class="header-search" action="pages/shop/search.html"><label class="sr-only" for="header-search-index">Suche</label><input id="header-search-index" type="search" name="q" placeholder="Produkte suchen" aria-label="Produkte suchen"></form>
       <a href="pages/auth/login.html">Login</a>
       <a href="pages/shop/cart.html">Warenkorb</a>
     </div>
@@ -131,13 +131,8 @@
         </div>
         <a class="btn secondary" href="pages/shop/products.html">Alle Produkte</a>
       </div>
-      <div class="products-grid">
-        <article class="product-card"><div class="image-placeholder"></div><div class="card-body"><h3>Anzug Milano</h3><p>Moderner Schnitt in Anthrazit.</p><div class="price">249,90 €</div></div></article>
-        <article class="product-card"><div class="image-placeholder"></div><div class="card-body"><h3>Hemd Oxford</h3><p>Klassisches Hemd für Business und Freizeit.</p><div class="price">59,90 €</div></div></article>
-        <article class="product-card"><div class="image-placeholder"></div><div class="card-body"><h3>Lederschuh Noir</h3><p>Schlichter Schuh für elegante Looks.</p><div class="price">129,90 €</div></div></article>
-        <article class="product-card"><div class="image-placeholder"></div><div class="card-body"><h3>Gürtel Cognac</h3><p>Warmes Leder als dezenter Akzent.</p><div class="price">39,90 €</div></div></article>
-        <article class="product-card"><div class="image-placeholder"></div><div class="card-body"><h3>Pflegeset Barber</h3><p>Kamm, Bartöl und Pflege für den Alltag.</p><div class="price">34,90 €</div></div></article>
-        <article class="product-card"><div class="image-placeholder"></div><div class="card-body"><h3>Strickpullover Sand</h3><p>Warmer Look für gepflegte Casual Outfits.</p><div class="price">79,90 €</div></div></article>
+      <div class="products-grid" id="homeProductsGrid">
+        <p class="session-hint">Produkte werden geladen...</p>
       </div>
     </div>
   </section>
@@ -217,5 +212,6 @@
 </footer>
 
 <script src="js/api.js"></script>
+<script src="js/products.js"></script>
 </body>
 </html>

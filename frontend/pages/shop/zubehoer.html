@@ -26,7 +26,7 @@
       <a href="../shop/pflege.html">Pflege</a>
     </nav>
     <div class="nav-actions">
-      <form class="header-search" action="../shop/search.html"><label class="sr-only" for="header-search-zubehoer">Suche</label><input id="header-search-zubehoer" type="search" placeholder="Produkte suchen" aria-label="Produkte suchen"></form>
+      <form class="header-search" action="../shop/search.html"><label class="sr-only" for="header-search-zubehoer">Suche</label><input id="header-search-zubehoer" type="search" name="q" placeholder="Produkte suchen" aria-label="Produkte suchen"></form>
       <a href="../auth/login.html">Login</a>
       <a href="../shop/cart.html">Warenkorb</a>
     </div>
@@ -44,22 +44,17 @@
   </section>
   <section class="section" style="padding-top:26px">
     <div class="container">
-      <div class="filter-bar">
-        <span class="filter-chip active">Zubehör</span>
-        <input class="filter-control" type="radio" name="sort-zubehoer" id="zubehoer-price-up">
-        <label class="filter-chip" for="zubehoer-price-up">Preis aufsteigend</label>
-        <input class="filter-control" type="radio" name="sort-zubehoer" id="zubehoer-price-down">
-        <label class="filter-chip" for="zubehoer-price-down">Preis absteigend</label>
-        <input class="search-box" placeholder="In Zubehör suchen">
-      </div>
-      <div class="products-grid" style="margin-top:28px">
-        <article class="product-card"><div class="image-placeholder"></div><div class="card-body"><a href="product-detail.html"><h3>Gürtel Cognac</h3></a><p>Warmes Leder als dezenter Akzent.</p><div class="price">39,90 €</div></div></article>
-<article class="product-card"><div class="image-placeholder"></div><div class="card-body"><a href="product-detail.html"><h3>Uhr Minimal</h3></a><p>Schlichte Uhr mit Lederband.</p><div class="price">89,90 €</div></div></article>
-<article class="product-card"><div class="image-placeholder"></div><div class="card-body"><a href="product-detail.html"><h3>Krawatte Braun</h3></a><p>Feiner Akzent für Business-Looks.</p><div class="price">29,90 €</div></div></article>
-<article class="product-card"><div class="image-placeholder"></div><div class="card-body"><a href="product-detail.html"><h3>Einstecktuch Creme</h3></a><p>Kleines Detail mit großer Wirkung.</p><div class="price">19,90 €</div></div></article>
-<article class="product-card"><div class="image-placeholder"></div><div class="card-body"><a href="product-detail.html"><h3>Kamm Premium</h3></a><p>Hochwertiger Kamm für unterwegs.</p><div class="price">14,90 €</div></div></article>
-<article class="product-card"><div class="image-placeholder"></div><div class="card-body"><a href="product-detail.html"><h3>Leder Wallet</h3></a><p>Cleanes Portemonnaie in Dunkelbraun.</p><div class="price">49,90 €</div></div></article>
-
+      <div class="split">
+        <div class="text-card">
+          <p class="eyebrow">Kategorie</p>
+          <h2>Details, die den Unterschied machen.</h2>
+          <p class="lead">Gürtel, Krawatten und Einstecktücher als dezente Akzente. Das gesamte Zubehör findest du in unserem Sortiment.</p>
+          <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:28px">
+            <a class="btn" href="products.html">Alle Produkte</a>
+            <a class="btn secondary" href="search.html?q=krawatte">Krawatten ansehen</a>
+          </div>
+        </div>
+        <div class="image-placeholder"></div>
       </div>
     </div>
   </section>

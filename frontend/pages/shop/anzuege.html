@@ -26,7 +26,7 @@
       <a href="../shop/pflege.html">Pflege</a>
     </nav>
     <div class="nav-actions">
-      <form class="header-search" action="../shop/search.html"><label class="sr-only" for="header-search-anzuege">Suche</label><input id="header-search-anzuege" type="search" placeholder="Produkte suchen" aria-label="Produkte suchen"></form>
+      <form class="header-search" action="../shop/search.html"><label class="sr-only" for="header-search-anzuege">Suche</label><input id="header-search-anzuege" type="search" name="q" placeholder="Produkte suchen" aria-label="Produkte suchen"></form>
       <a href="../auth/login.html">Login</a>
       <a href="../shop/cart.html">Warenkorb</a>
     </div>
@@ -44,22 +44,17 @@
   </section>
   <section class="section" style="padding-top:26px">
     <div class="container">
-      <div class="filter-bar">
-        <span class="filter-chip active">Anzüge</span>
-        <input class="filter-control" type="radio" name="sort-anzuege" id="anzuege-price-up">
-        <label class="filter-chip" for="anzuege-price-up">Preis aufsteigend</label>
-        <input class="filter-control" type="radio" name="sort-anzuege" id="anzuege-price-down">
-        <label class="filter-chip" for="anzuege-price-down">Preis absteigend</label>
-        <input class="search-box" placeholder="In Anzüge suchen">
-      </div>
-      <div class="products-grid" style="margin-top:28px">
-        <article class="product-card"><div class="image-placeholder"></div><div class="card-body"><a href="product-detail.html"><h3>Anzug Milano</h3></a><p>Moderner Schnitt in Anthrazit.</p><div class="price">249,90 €</div></div></article>
-<article class="product-card"><div class="image-placeholder"></div><div class="card-body"><a href="product-detail.html"><h3>Anzug Torino</h3></a><p>Warmes Braun mit cleanem Look.</p><div class="price">279,90 €</div></div></article>
-<article class="product-card"><div class="image-placeholder"></div><div class="card-body"><a href="product-detail.html"><h3>Sakko Roma</h3></a><p>Einzelnes Sakko für flexible Kombinationen.</p><div class="price">149,90 €</div></div></article>
-<article class="product-card"><div class="image-placeholder"></div><div class="card-body"><a href="product-detail.html"><h3>Anzug Berlin</h3></a><p>Minimalistisch und sehr alltagstauglich.</p><div class="price">229,90 €</div></div></article>
-<article class="product-card"><div class="image-placeholder"></div><div class="card-body"><a href="product-detail.html"><h3>Weste Classic</h3></a><p>Elegantes Layering für formelle Outfits.</p><div class="price">69,90 €</div></div></article>
-<article class="product-card"><div class="image-placeholder"></div><div class="card-body"><a href="product-detail.html"><h3>Anzug Slim Noir</h3></a><p>Dunkler Look für Abend und Events.</p><div class="price">299,90 €</div></div></article>
-
+      <div class="split">
+        <div class="text-card">
+          <p class="eyebrow">Kategorie</p>
+          <h2>Anzüge, die sitzen.</h2>
+          <p class="lead">Klassische und moderne Anzüge für Business, Events und Alltag. Alle verfügbaren Anzüge findest du direkt in unserem Sortiment.</p>
+          <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:28px">
+            <a class="btn" href="search.html?q=anzug">Anzüge ansehen</a>
+            <a class="btn secondary" href="products.html">Alle Produkte</a>
+          </div>
+        </div>
+        <div class="image-placeholder"></div>
       </div>
     </div>
   </section>

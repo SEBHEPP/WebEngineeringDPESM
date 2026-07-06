@@ -26,7 +26,7 @@
       <a href="../shop/pflege.html">Pflege</a>
     </nav>
     <div class="nav-actions">
-      <form class="header-search" action="../shop/search.html"><label class="sr-only" for="header-search-products">Suche</label><input id="header-search-products" type="search" placeholder="Produkte suchen" aria-label="Produkte suchen"></form>
+      <form class="header-search" action="../shop/search.html"><label class="sr-only" for="header-search-products">Suche</label><input id="header-search-products" type="search" name="q" placeholder="Produkte suchen" aria-label="Produkte suchen"></form>
       <a href="../auth/login.html">Login</a>
       <a href="../shop/cart.html">Warenkorb</a>
     </div>
@@ -39,34 +39,13 @@
     <div class="container">
       <p class="eyebrow">Shop</p>
       <h1>Produkte</h1>
-      <p class="lead">Produkte suchen, filtern und später über das Inventarsystem laden. Die Felder sind als einfache Schnittstelle für Name, Kategorie und Produkt-ID vorbereitet.</p>
+      <p class="lead">Unser gesamtes Sortiment auf einen Blick. Zum Suchen die Suchleiste oben im Header verwenden.</p>
     </div>
   </section>
   <section class="section" style="padding-top:26px">
     <div class="container">
-      <div class="filter-bar" id="productSearchForm">
-        <a class="filter-chip active" href="products.html">Alle</a>
-        <a class="filter-chip" href="anzuege.html">Anzüge</a>
-        <a class="filter-chip" href="hemden.html">Hemden</a>
-        <a class="filter-chip" href="schuhe.html">Schuhe</a>
-        <a class="filter-chip" href="zubehoer.html">Zubehör</a>
-        <a class="filter-chip" href="pflege.html">Pflege</a>
-        <input class="filter-control" type="radio" name="sort-products" id="products-price-up" value="price_asc">
-        <label class="filter-chip" for="products-price-up">Preis aufsteigend</label>
-        <input class="filter-control" type="radio" name="sort-products" id="products-price-down" value="price_desc">
-        <label class="filter-chip" for="products-price-down">Preis absteigend</label>
-        <input class="search-box" name="q" placeholder="Produktname suchen">
-        <input class="search-box" name="productId" placeholder="Produkt-ID">
-      </div>
-      <div class="products-grid" id="productsGrid" style="margin-top:28px">
-        
-<article class="product-card" id="product-gm-1001"><div class="image-placeholder"></div><div class="card-body"><a href="product-detail.html"><h3>Anzug Milano</h3></a><p>Produkt-ID GM-1001 · Moderner Schnitt in Anthrazit.</p><span class="status green">Auf Lager</span><div class="price">249,90 €</div></div></article>
-<article class="product-card" id="product-gm-1002"><div class="image-placeholder"></div><div class="card-body"><a href="product-detail.html"><h3>Hemd Oxford</h3></a><p>Produkt-ID GM-1002 · Klassisches Hemd für Business und Freizeit.</p><span class="status green">Auf Lager</span><div class="price">59,90 €</div></div></article>
-<article class="product-card" id="product-gm-1003"><div class="image-placeholder"></div><div class="card-body"><a href="product-detail.html"><h3>Lederschuh Noir</h3></a><p>Produkt-ID GM-1003 · Schlichter Schuh für elegante Looks.</p><span class="status green">Auf Lager</span><div class="price">129,90 €</div></div></article>
-<article class="product-card" id="product-gm-1004"><div class="image-placeholder"></div><div class="card-body"><a href="product-detail.html"><h3>Gürtel Cognac</h3></a><p>Produkt-ID GM-1004 · Warmes Leder als dezenter Akzent.</p><span class="status green">Auf Lager</span><div class="price">39,90 €</div></div></article>
-<article class="product-card" id="product-gm-1005"><div class="image-placeholder"></div><div class="card-body"><a href="product-detail.html"><h3>Pflegeset Barber</h3></a><p>Produkt-ID GM-1005 · Kamm, Bartöl und Pflege für den Alltag.</p><span class="status green">Auf Lager</span><div class="price">34,90 €</div></div></article>
-<article class="product-card" id="product-gm-1006"><div class="image-placeholder"></div><div class="card-body"><a href="product-detail.html"><h3>Strickpullover Sand</h3></a><p>Produkt-ID GM-1006 · Warmer Look für gepflegte Casual Outfits.</p><span class="status red">Nicht verfügbar</span><div class="price">79,90 €</div><p class="interface-note">Warenkorb-Button später nur aktivieren, wenn Bestand größer als 0 ist.</p></div></article>
-
+      <div class="products-grid" id="productsGrid">
+        <p class="session-hint">Produkte werden geladen...</p>
       </div>
     </div>
   </section>

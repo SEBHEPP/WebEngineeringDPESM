@@ -26,7 +26,7 @@
       <a href="../shop/pflege.html">Pflege</a>
     </nav>
     <div class="nav-actions">
-      <form class="header-search" action="../shop/search.html"><label class="sr-only" for="header-search-products">Suche</label><input id="header-search-products" type="search" placeholder="Produkte suchen" aria-label="Produkte suchen"></form>
+      <form class="header-search" action="../shop/search.html"><label class="sr-only" for="header-search-products">Suche</label><input id="header-search-products" type="search" name="q" placeholder="Produkte suchen" aria-label="Produkte suchen"></form>
       <a href="../auth/login.html">Login</a>
       <a href="../shop/cart.html">Warenkorb</a>
     </div>
@@ -57,6 +57,7 @@
         <div class="field" style="margin-top:14px"><label>Produkt-ID</label><input name="productId" placeholder="leer lassen für neu"></div>
         <div class="field" style="margin-top:14px"><label>Name</label><input name="name" placeholder="Produktname" required></div>
         <div class="field" style="margin-top:12px"><label>Beschreibung</label><textarea name="description" rows="3" placeholder="Kurze Produktbeschreibung"></textarea></div>
+        <div class="field" style="margin-top:12px"><label>Bild-URL</label><input name="imageUrl" placeholder="https://..."></div>
         <div class="field" style="margin-top:12px"><label>Preis</label><input name="price" placeholder="0.00" required></div>
         <div class="field" style="margin-top:12px"><label>Menge</label><input name="availableQuantity" placeholder="0" required></div>
         <button class="btn" type="submit" style="width:100%;margin-top:16px">Speichern</button>

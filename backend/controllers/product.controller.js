@@ -45,6 +45,16 @@ function normalizeQuantity(value) {
   return quantity;
 }
 
+function normalizeImageUrl(value) {
+  if (value === undefined || value === null) {
+    return null;
+  }
+
+  const imageUrl = String(value).trim();
+
+  return imageUrl.length > 0 ? imageUrl : null;
+}
+
 function toProduct(row) {
   return {
     id: row.id,
@@ -52,6 +62,7 @@ function toProduct(row) {
     description: row.description,
     price: Number(row.price),
     availableQuantity: row.available_quantity,
+    imageUrl: row.image_url,
     createdAt: row.created_at
   };
 }
@@ -89,7 +100,7 @@ async function listProducts(req, res, next) {
 
     const whereSql = whereParts.length > 0 ? `WHERE ${whereParts.join(" AND ")}` : "";
     const result = await db.query(
-      `SELECT id, name, description, price, available_quantity, created_at
+      `SELECT id, name, description, price, available_quantity, image_url, created_at
        FROM products
        ${whereSql}
        ORDER BY ${orderBy}
@@ -109,7 +120,7 @@ async function getProductById(req, res, next) {
   try {
     const productId = normalizeId(req.params.id, "productId");
     const result = await db.query(
-      "SELECT id, name, description, price, available_quantity, created_at FROM products WHERE id = $1",
+      "SELECT id, name, description, price, available_quantity, image_url, created_at FROM products WHERE id = $1",
       [productId]
     );
     const product = result.rows[0];
@@ -132,12 +143,13 @@ async function createProduct(req, res, next) {
     const description = req.body.description ? String(req.body.description).trim() : null;
     const price = normalizePrice(req.body.price);
     const availableQuantity = normalizeQuantity(req.body.availableQuantity ?? req.body.available_quantity ?? 0);
+    const imageUrl = normalizeImageUrl(req.body.imageUrl ?? req.body.image_url);
 
     const result = await db.query(
-      `INSERT INTO products (name, description, price, available_quantity)
-       VALUES ($1, $2, $3, $4)
-       RETURNING id, name, description, price, available_quantity, created_at`,
-      [name, description, price, availableQuantity]
+      `INSERT INTO products (name, description, price, available_quantity, image_url)
+       VALUES ($1, $2, $3, $4, $5)
+       RETURNING id, name, description, price, available_quantity, image_url, created_at`,
+      [name, description, price, availableQuantity, imageUrl]
     );
 
     res.status(201).json({
@@ -153,7 +165,7 @@ async function updateProduct(req, res, next) {
   try {
     const productId = normalizeId(req.params.id, "productId");
     const oldProductResult = await db.query(
-      "SELECT id, name, description, price, available_quantity, created_at FROM products WHERE id = $1",
+      "SELECT id, name, description, price, available_quantity, image_url, created_at FROM products WHERE id = $1",
       [productId]
     );
     const oldProduct = oldProductResult.rows[0];
@@ -169,13 +181,17 @@ async function updateProduct(req, res, next) {
     const availableQuantity = availableQuantityValue !== undefined
       ? normalizeQuantity(availableQuantityValue)
       : oldProduct.available_quantity;
+    const imageUrlValue = req.body.imageUrl ?? req.body.image_url;
+    const imageUrl = imageUrlValue !== undefined
+      ? normalizeImageUrl(imageUrlValue)
+      : oldProduct.image_url;
 
     const result = await db.query(
       `UPDATE products
-       SET name = $1, description = $2, price = $3, available_quantity = $4
-       WHERE id = $5
-       RETURNING id, name, description, price, available_quantity, created_at`,
-      [name, description, price, availableQuantity, productId]
+       SET name = $1, description = $2, price = $3, available_quantity = $4, image_url = $5
+       WHERE id = $6
+       RETURNING id, name, description, price, available_quantity, image_url, created_at`,
+      [name, description, price, availableQuantity, imageUrl, productId]
     );
 
     res.status(200).json({
@@ -193,7 +209,7 @@ async function deleteProduct(req, res, next) {
     const result = await db.query(
       `DELETE FROM products
        WHERE id = $1
-       RETURNING id, name, description, price, available_quantity, created_at`,
+       RETURNING id, name, description, price, available_quantity, image_url, created_at`,
       [productId]
     );
     const product = result.rows[0];

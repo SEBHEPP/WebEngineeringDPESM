@@ -26,7 +26,7 @@
       <a href="../shop/pflege.html">Pflege</a>
     </nav>
     <div class="nav-actions">
-      <form class="header-search" action="../shop/search.html"><label class="sr-only" for="header-search-pflege">Suche</label><input id="header-search-pflege" type="search" placeholder="Produkte suchen" aria-label="Produkte suchen"></form>
+      <form class="header-search" action="../shop/search.html"><label class="sr-only" for="header-search-pflege">Suche</label><input id="header-search-pflege" type="search" name="q" placeholder="Produkte suchen" aria-label="Produkte suchen"></form>
       <a href="../auth/login.html">Login</a>
       <a href="../shop/cart.html">Warenkorb</a>
     </div>
@@ -44,22 +44,17 @@
   </section>
   <section class="section" style="padding-top:26px">
     <div class="container">
-      <div class="filter-bar">
-        <span class="filter-chip active">Pflege</span>
-        <input class="filter-control" type="radio" name="sort-pflege" id="pflege-price-up">
-        <label class="filter-chip" for="pflege-price-up">Preis aufsteigend</label>
-        <input class="filter-control" type="radio" name="sort-pflege" id="pflege-price-down">
-        <label class="filter-chip" for="pflege-price-down">Preis absteigend</label>
-        <input class="search-box" placeholder="In Pflege suchen">
-      </div>
-      <div class="products-grid" style="margin-top:28px">
-        <article class="product-card"><div class="image-placeholder"></div><div class="card-body"><a href="product-detail.html"><h3>Pflegeset Barber</h3></a><p>Kamm, Bartöl und Pflege für den Alltag.</p><div class="price">34,90 €</div></div></article>
-<article class="product-card"><div class="image-placeholder"></div><div class="card-body"><a href="product-detail.html"><h3>Bartöl Cedar</h3></a><p>Warmer Duft mit gepflegtem Finish.</p><div class="price">17,90 €</div></div></article>
-<article class="product-card"><div class="image-placeholder"></div><div class="card-body"><a href="product-detail.html"><h3>Pomade Classic</h3></a><p>Kontrolle für einen sauberen Look.</p><div class="price">15,90 €</div></div></article>
-<article class="product-card"><div class="image-placeholder"></div><div class="card-body"><a href="product-detail.html"><h3>Rasierpinsel Set</h3></a><p>Traditionelle Pflege modern gedacht.</p><div class="price">39,90 €</div></div></article>
-<article class="product-card"><div class="image-placeholder"></div><div class="card-body"><a href="product-detail.html"><h3>Aftershave Balm</h3></a><p>Beruhigende Pflege nach der Rasur.</p><div class="price">18,90 €</div></div></article>
-<article class="product-card"><div class="image-placeholder"></div><div class="card-body"><a href="product-detail.html"><h3>Travel Kit</h3></a><p>Pflegeprodukte im kleinen Format.</p><div class="price">24,90 €</div></div></article>
-
+      <div class="split">
+        <div class="text-card">
+          <p class="eyebrow">Kategorie</p>
+          <h2>Pflege für den sauberen Auftritt.</h2>
+          <p class="lead">Von Bartöl bis Schuhpflege. Alle verfügbaren Pflegeprodukte findest du direkt in unserem Sortiment.</p>
+          <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:28px">
+            <a class="btn" href="search.html?q=pflege">Pflege ansehen</a>
+            <a class="btn secondary" href="products.html">Alle Produkte</a>
+          </div>
+        </div>
+        <div class="image-placeholder"></div>
       </div>
     </div>
   </section>

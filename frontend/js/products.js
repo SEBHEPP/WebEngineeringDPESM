@@ -1,9 +1,26 @@
 // Elias
 document.addEventListener("DOMContentLoaded", () => {
+  setupHomeProducts();
   setupProductsPage();
   setupProductDetailPage();
   setupAdminProductsPage();
 });
+
+function escapeHtml(value) {
+  return String(value ?? "").replace(/[&<>"']/g, (char) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    "\"": "&quot;",
+    "'": "&#39;"
+  })[char]);
+}
+
+function productImage(product) {
+  if (!product.imageUrl) return "";
+
+  return `<img src="${escapeHtml(product.imageUrl)}" alt="${escapeHtml(product.name)}" loading="lazy" onerror="this.remove()">`;
+}
 
 async function loadProducts(params = {}) {
   const searchParams = new URLSearchParams();
@@ -18,12 +35,12 @@ async function loadProducts(params = {}) {
   return data.products || [];
 }
 
-function productCard(product) {
+function productCard(product, linkPrefix = "") {
   return `
     <article class="product-card">
-      <div class="image-placeholder"></div>
+      <div class="image-placeholder">${productImage(product)}</div>
       <div class="card-body">
-        <a href="product-detail.html?id=${product.id}"><h3>${product.name}</h3></a>
+        <a href="${linkPrefix}product-detail.html?id=${product.id}"><h3>${product.name}</h3></a>
         <p>Produkt-ID ${product.id} · ${product.description || "Keine Beschreibung"}</p>
         <span class="status ${product.availableQuantity > 0 ? "green" : "red"}">${product.availableQuantity > 0 ? "Auf Lager" : "Nicht verfügbar"}</span>
         <div class="price">${formatPrice(product.price)}</div>
@@ -47,10 +64,29 @@ function setupProductButtons(container, products) {
   });
 }
 
+async function setupHomeProducts() {
+  const grid = document.getElementById("homeProductsGrid");
+  if (!grid) return;
+
+  try {
+    const products = await loadProducts({ limit: 8 });
+    grid.innerHTML = products.length
+      ? products.map((product) => productCard(product, "pages/shop/")).join("")
+      : "<div class=\"empty-state\">Aktuell sind keine Produkte verfügbar.</div>";
+    setupProductButtons(grid, products);
+  } catch (error) {
+    grid.innerHTML = `<p class="session-hint error">${error.message}</p>`;
+  }
+}
+
 function setupProductsPage() {
   const grid = document.getElementById("productsGrid");
   const form = document.getElementById("productSearchForm");
   if (!grid) return;
+
+  const initialQuery = getParam("q");
+  const initialQueryInput = form?.querySelector("[name='q']");
+  if (initialQuery && initialQueryInput) initialQueryInput.value = initialQuery;
 
   async function render() {
     try {
@@ -111,6 +147,9 @@ async function setupProductDetailPage() {
     box.querySelector("[data-product-status]").textContent = product.availableQuantity > 0 ? "Auf Lager" : "Nicht verfügbar";
     box.querySelector("[data-product-id]").textContent = product.id;
 
+    const galleryMain = document.querySelector(".gallery-main");
+    if (galleryMain) galleryMain.innerHTML = productImage(product);
+
     const cartButton = box.querySelector("[data-add-cart]");
     cartButton.disabled = product.availableQuantity <= 0;
     cartButton.addEventListener("click", () => {
@@ -152,6 +191,7 @@ function setupAdminProductsPage() {
           form.description.value = product.description || "";
           form.price.value = product.price;
           form.availableQuantity.value = product.availableQuantity;
+          if (form.imageUrl) form.imageUrl.value = product.imageUrl || "";
         });
       });
 
@@ -175,7 +215,8 @@ function setupAdminProductsPage() {
       name: form.name.value,
       description: form.description.value,
       price: form.price.value,
-      availableQuantity: form.availableQuantity.value
+      availableQuantity: form.availableQuantity.value,
+      imageUrl: form.imageUrl ? form.imageUrl.value : ""
     };
 
     try {

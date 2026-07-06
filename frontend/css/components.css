@@ -27,6 +27,8 @@
 .image-placeholder {
   background: linear-gradient(145deg, #dbcbb8, #a28366 52%, #45362d); min-height: 430px; overflow: hidden; position: relative;
 }
+.image-placeholder img { height: 100%; inset: 0; object-fit: cover; position: absolute; width: 100%; z-index: 1; }
+.image-placeholder:has(img)::before, .image-placeholder:has(img)::after { display: none; }
 .image-placeholder::before { border: 1px solid rgba(255,255,255,.35); content: ""; inset: 10%; position: absolute; }
 .image-placeholder::after { color: rgba(255,255,255,.7); content: "GENTLEMAN"; font-family: Georgia, serif; font-size: .7rem; left: 50%; letter-spacing: .3em; position: absolute; top: 50%; transform: translate(-50%, -50%); }
 .product-card:nth-child(3n+2) .image-placeholder, .feature-card:nth-child(3n+2) .image-placeholder { background: linear-gradient(145deg, #d9d4cb, #77746f 55%, #282725); }
