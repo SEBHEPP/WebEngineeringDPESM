@@ -1,5 +1,3 @@
-# WICHTIG: shop.deinedomain.de durch deine echte Subdomain ersetzen,
-# die bei Strato per A-Record auf die IP des Hetzner-Servers zeigt.
-shop.deinedomain.de {
+gentlemanshop.sebastian-hepp.com {
 	reverse_proxy backend:3000
 }
