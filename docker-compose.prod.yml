@@ -1,0 +1,95 @@
+# Produktions-Setup fuer den Hetzner-Server: Caddy als Reverse-Proxy mit
+# automatischem Let's-Encrypt-HTTPS auf 80/443, App nur intern auf 3000.
+# Start:  docker compose -f docker-compose.prod.yml up --build -d
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: webshop-backend
+    env_file:
+      - ./backend/.env.example
+    expose:
+      - "3000"
+    depends_on:
+      db:
+        condition: service_healthy
+      maildev:
+        condition: service_started
+    networks:
+      - webshop-network
+    restart: unless-stopped
+
+  db:
+    image: postgres:16-alpine
+    container_name: webshop-db
+    environment:
+      POSTGRES_DB: webshop
+      POSTGRES_USER: webshop_user
+      POSTGRES_PASSWORD: webshop_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U webshop_user -d webshop"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - webshop-network
+    restart: unless-stopped
+
+  # Nur intern / per SSH-Tunnel erreichbar (nicht oeffentlich)
+  maildev:
+    image: maildev/maildev:2.1.0
+    container_name: webshop-maildev
+    ports:
+      - "127.0.0.1:1080:1080"
+    networks:
+      - webshop-network
+    restart: unless-stopped
+
+  # Nur intern / per SSH-Tunnel erreichbar (nicht oeffentlich)
+  dbadmin:
+    image: dpage/pgadmin4:latest
+    container_name: webshop-dbadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@webshop.dev
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+    ports:
+      - "127.0.0.1:5050:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - webshop-network
+    restart: unless-stopped
+
+  caddy:
+    image: caddy:2-alpine
+    container_name: webshop-caddy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - backend
+    networks:
+      - webshop-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  pgadmin_data:
+  caddy_data:
+  caddy_config:
+
+networks:
+  webshop-network:
+    driver: bridge
