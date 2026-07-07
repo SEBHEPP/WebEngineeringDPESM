@@ -1,65 +1,109 @@
 // Elias
 document.addEventListener("DOMContentLoaded", () => {
-  setupWishlistOverview();
+  setupMyWishlist();
   setupWishlistDetail();
 });
 
-function wishlistCard(wishlist) {
+function wishlistItemRow(item) {
+  const image = item.imageUrl
+    ? `<img src="${item.imageUrl}" alt="${item.name || ""}" loading="lazy" onerror="this.remove()">`
+    : "";
+
   return `
-    <article class="product-card">
-      <div class="image-placeholder"></div>
-      <div class="card-body">
-        <a href="wishlist-detail.html?id=${wishlist.id}"><h3>${wishlist.name}</h3></a>
-        <p>ID ${wishlist.id} · ${wishlist.description || "Keine Beschreibung"}</p>
-        <span class="status ${wishlist.role === "owner" ? "green" : ""}">${wishlist.role}</span>
-        <div class="button-row" style="margin-top:14px">
-          <a class="btn small secondary" href="wishlist-detail.html?id=${wishlist.id}">Öffnen</a>
-          ${wishlist.role === "owner" ? `<button class="btn small danger" data-delete-wishlist="${wishlist.id}" type="button">Löschen</button>` : ""}
-        </div>
-      </div>
-    </article>
+    <div class="cart-item">
+      <div class="image-placeholder">${image}</div>
+      <div><h3>${item.name || "Gelöschtes Produkt"}</h3><p>Produkt-ID ${item.productId}</p></div>
+      <div class="button-row"><strong>${formatPrice(item.price)}</strong><button class="btn small danger" data-remove-product="${item.productId}" type="button">Entfernen</button></div>
+    </div>
   `;
 }
 
-function setupWishlistOverview() {
-  const grid = document.getElementById("wishlistGrid");
-  const form = document.getElementById("wishlistForm");
+function wishlistPermissionRow(permission) {
+  return `
+    <div>
+      <span>${permission.email} · ${permission.role}</span>
+      ${permission.role !== "owner" ? `<button class="btn small danger" data-remove-permission="${permission.userId}" type="button">Entfernen</button>` : "<span></span>"}
+    </div>
+  `;
+}
+
+function setupMyWishlist() {
+  const page = document.getElementById("wishlistPage");
+  const itemBox = document.getElementById("wishlistItems");
+  if (!page || !itemBox) return;
+
+  const permissionBox = document.getElementById("wishlistPermissions");
+  const permissionForm = document.getElementById("wishlistPermissionForm");
   const message = document.getElementById("wishlistMessage");
-  if (!grid) return;
+  const copyButton = document.getElementById("copyWishlistLink");
+  let wishlistId = null;
 
   async function render() {
     try {
-      const data = await apiRequest("/wishlists");
-      const wishlists = data.wishlists || [];
-      grid.innerHTML = wishlists.length ? wishlists.map(wishlistCard).join("") : "<div class=\"empty-state\">Noch keine Wunschliste vorhanden.</div>";
+      const data = await apiRequest("/wishlists/me");
+      const wishlist = data.wishlist;
+      wishlistId = wishlist.id;
 
-      grid.querySelectorAll("[data-delete-wishlist]").forEach((button) => {
+      itemBox.innerHTML = wishlist.items.length
+        ? wishlist.items.map(wishlistItemRow).join("")
+        : "<div class=\"empty-state\">Deine Wunschliste ist leer.</div>";
+
+      if (permissionBox) {
+        permissionBox.innerHTML = wishlist.permissions.map(wishlistPermissionRow).join("");
+      }
+
+      itemBox.querySelectorAll("[data-remove-product]").forEach((button) => {
         button.addEventListener("click", async () => {
-          await apiRequest(`/wishlists/${button.dataset.deleteWishlist}`, { method: "DELETE" });
+          await apiRequest(`/wishlists/${wishlistId}/products/${button.dataset.removeProduct}`, { method: "DELETE" });
           render();
         });
       });
+
+      permissionBox?.querySelectorAll("[data-remove-permission]").forEach((button) => {
+        button.addEventListener("click", async () => {
+          try {
+            await apiRequest(`/wishlists/${wishlistId}/permissions/${button.dataset.removePermission}`, { method: "DELETE" });
+            render();
+          } catch (error) {
+            setMessage(message, error.message, "error");
+          }
+        });
+      });
     } catch (error) {
-      grid.innerHTML = `<p class="session-hint error">${error.message}</p>`;
+      itemBox.innerHTML = `<p class="session-hint error">${error.message}</p>`;
     }
   }
 
-  form?.addEventListener("submit", async (event) => {
+  permissionForm?.addEventListener("submit", async (event) => {
     event.preventDefault();
+    if (!wishlistId) return;
 
     try {
-      const data = await apiRequest("/wishlists", {
+      await apiRequest(`/wishlists/${wishlistId}/permissions`, {
         method: "POST",
-        body: JSON.stringify({
-          name: form.name.value,
-          description: form.description.value
-        })
+        body: JSON.stringify({ userId: permissionForm.userId.value, role: permissionForm.role.value })
       });
-
-      setMessage(message, "Wunschliste erstellt.", "success");
-      window.location.href = `wishlist-detail.html?id=${data.wishlist.id}`;
+      permissionForm.reset();
+      setMessage(message, "Berechtigung gespeichert.", "success");
+      render();
     } catch (error) {
       setMessage(message, error.message, "error");
+    }
+  });
+
+  copyButton?.addEventListener("click", async () => {
+    if (!wishlistId) {
+      setMessage(message, "Wunschliste noch nicht geladen.", "error");
+      return;
+    }
+
+    const url = `${window.location.origin}/pages/wishlist/wishlist-detail.html?id=${wishlistId}`;
+
+    try {
+      await navigator.clipboard.writeText(url);
+      setMessage(message, "Link kopiert.", "success");
+    } catch (error) {
+      window.prompt("Link kopieren:", url);
     }
   });
 

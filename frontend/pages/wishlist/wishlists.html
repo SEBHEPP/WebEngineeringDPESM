@@ -35,20 +35,22 @@
 
 
 <main>
-  <section class="page-hero"><div class="container"><p class="eyebrow">Wunschlisten</p><h1>Meine Wunschlisten</h1><p class="lead">Listen erstellen, Produkte speichern und mit anderen Nutzern teilen.</p><div style="margin-top:20px"><a class="btn secondary" href="../shop/orders.html">Zur Kaufhistorie</a></div></div></section>
+  <section class="page-hero"><div class="container"><p class="eyebrow">Account</p><h1>Meine Wunschliste</h1><p class="lead">Deine gespeicherten Produkte. Über eine Produktseite mit „Zur Wunschliste" hinzufügen.</p><div style="margin-top:20px;display:flex;gap:12px;flex-wrap:wrap"><a class="btn secondary" href="../shop/orders.html">Zur Kaufhistorie</a><button class="btn secondary" id="copyWishlistLink" type="button">Link kopieren</button></div></div></section>
   <section class="section" style="padding-top:26px">
-    <div class="container wishlist-layout">
-      <div class="products-grid" id="wishlistGrid">
-        <article class="product-card"><div class="image-placeholder"></div><div class="card-body"><a href="wishlist-detail.html"><h3>Business Outfit</h3></a><p>ID WL-2001 · Anzug, Hemd und Schuhe. Besitzer: U-1001.</p><span class="status green">Besitzer</span><div class="button-row" style="margin-top:14px"><a class="btn small secondary" href="wishlist-detail.html">Öffnen</a><a class="btn small danger" href="wishlists.html">Löschen</a></div></div></article>
-        <article class="product-card"><div class="image-placeholder"></div><div class="card-body"><a href="wishlist-detail.html"><h3>Pflege Set</h3></a><p>ID WL-2002 · Produkte für Bart und Details. Berechtigung: Lesen.</p><span class="status">Lesen</span><div class="button-row" style="margin-top:14px"><a class="btn small secondary" href="wishlist-detail.html">Öffnen</a></div></div></article>
+    <div class="container wishlist-layout" id="wishlistPage">
+      <div class="table-card" id="wishlistItems">
+        <p class="session-hint">Wunschliste wird geladen...</p>
       </div>
-      <form class="summary-card" id="wishlistForm">
-        <h3>Neue Liste</h3>
-        <div class="field" style="margin-top:16px"><label>Name</label><input name="name" placeholder="Name der Wunschliste" required></div>
-        <div class="field" style="margin-top:12px"><label>Beschreibung</label><textarea name="description" rows="4" placeholder="Beschreibung"></textarea></div>
-        <button class="btn" type="submit" style="width:100%;margin-top:16px">Wunschliste erstellen</button>
+      <aside class="summary-card">
+        <h3>Teilen</h3>
+        <form id="wishlistPermissionForm">
+          <div class="field" style="margin-top:16px"><label>User-ID</label><input name="userId" placeholder="2" required></div>
+          <div class="field" style="margin-top:12px"><label>Berechtigung</label><select name="role"><option value="read">Leseberechtigung</option><option value="write">Schreibberechtigung</option></select></div>
+          <button class="btn" type="submit" style="width:100%;margin-top:16px">Berechtigung setzen</button>
+        </form>
+        <div class="permission-list" id="wishlistPermissions"></div>
         <p class="session-hint" id="wishlistMessage"></p>
-      </form>
+      </aside>
     </div>
   </section>
 </main>

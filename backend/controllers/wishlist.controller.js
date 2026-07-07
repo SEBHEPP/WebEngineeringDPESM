@@ -53,6 +53,7 @@ function toItem(row) {
     description: row.description,
     price: row.price === null ? null : Number(row.price),
     availableQuantity: row.available_quantity,
+    imageUrl: row.image_url,
     addedAt: row.added_at
   };
 }
@@ -79,7 +80,7 @@ async function userExists(userId) {
 
 async function getWishlistItems(wishlistId) {
   const result = await db.query(
-    `SELECT wi.product_id, wi.added_at, p.name, p.description, p.price, p.available_quantity
+    `SELECT wi.product_id, wi.added_at, p.name, p.description, p.price, p.available_quantity, p.image_url
      FROM wishlist_items wi
      LEFT JOIN products p ON p.id = wi.product_id
      WHERE wi.wishlist_id = $1
@@ -101,6 +102,93 @@ async function getWishlistPermissions(wishlistId) {
   );
 
   return result.rows.map(toPermission);
+}
+
+// Jeder Nutzer hat genau eine persoenliche Wunschliste (wird bei Bedarf angelegt).
+async function getOrCreateMyWishlist(userId) {
+  const existing = await db.query(
+    `SELECT w.id, w.name, w.description, w.created_at
+     FROM wishlists w
+     JOIN wishlist_permissions wp ON wp.wishlist_id = w.id
+     WHERE wp.user_id = $1 AND wp.role = 'owner'
+     ORDER BY w.id ASC
+     LIMIT 1`,
+    [userId]
+  );
+
+  if (existing.rows[0]) {
+    return existing.rows[0];
+  }
+
+  const client = await db.pool.connect();
+
+  try {
+    await client.query("BEGIN");
+
+    const wishlistResult = await client.query(
+      `INSERT INTO wishlists (name, description)
+       VALUES ($1, $2)
+       RETURNING id, name, description, created_at`,
+      ["Meine Wunschliste", null]
+    );
+    const wishlist = wishlistResult.rows[0];
+
+    await client.query(
+      `INSERT INTO wishlist_permissions (wishlist_id, user_id, role)
+       VALUES ($1, $2, 'owner')`,
+      [wishlist.id, userId]
+    );
+
+    await client.query("COMMIT");
+
+    return wishlist;
+  } catch (error) {
+    await client.query("ROLLBACK");
+    throw error;
+  } finally {
+    client.release();
+  }
+}
+
+async function getMyWishlist(req, res, next) {
+  try {
+    const wishlist = await getOrCreateMyWishlist(req.user.id);
+    const items = await getWishlistItems(wishlist.id);
+    const permissions = await getWishlistPermissions(wishlist.id);
+
+    res.status(200).json({
+      wishlist: toWishlist(wishlist, items, permissions)
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function addProductToMyWishlist(req, res, next) {
+  try {
+    const productId = normalizeId(req.body.productId ?? req.body.product_id, "productId");
+
+    if (!(await productExists(productId))) {
+      throw createError(404, "product not found");
+    }
+
+    const wishlist = await getOrCreateMyWishlist(req.user.id);
+
+    await db.query(
+      `INSERT INTO wishlist_items (wishlist_id, product_id)
+       VALUES ($1, $2)
+       ON CONFLICT (wishlist_id, product_id) DO NOTHING`,
+      [wishlist.id, productId]
+    );
+
+    res.status(200).json({
+      message: "product added to wishlist",
+      wishlistId: wishlist.id,
+      productId
+    });
+  } catch (error) {
+    next(error);
+  }
 }
 
 async function createWishlist(req, res, next) {
@@ -335,8 +423,10 @@ async function removePermission(req, res, next) {
 
 module.exports = {
   addProduct,
+  addProductToMyWishlist,
   createWishlist,
   deleteWishlist,
+  getMyWishlist,
   getWishlistById,
   listWishlists,
   removePermission,

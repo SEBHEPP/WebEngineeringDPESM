@@ -171,6 +171,29 @@ async function setupProductDetailPage() {
       addedToCart = true;
       cartButton.textContent = "Zum Warenkorb";
     });
+
+    const wishlistButton = box.querySelector("[data-add-wishlist]");
+    if (wishlistButton) {
+      let addedToWishlist = false;
+
+      wishlistButton.addEventListener("click", async () => {
+        if (addedToWishlist) {
+          window.location.href = "../wishlist/wishlists.html";
+          return;
+        }
+
+        try {
+          await apiRequest("/wishlists/me/items", {
+            method: "POST",
+            body: JSON.stringify({ productId: product.id })
+          });
+          addedToWishlist = true;
+          wishlistButton.textContent = "Zur Wunschliste ✓";
+        } catch (error) {
+          window.location.href = "../auth/login.html";
+        }
+      });
+    }
   } catch (error) {
     box.innerHTML = `<p class="session-hint error">${error.message}</p>`;
   }
