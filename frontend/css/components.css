@@ -35,6 +35,9 @@
 .product-card:nth-child(3n+3) .image-placeholder, .feature-card:nth-child(3n+3) .image-placeholder { background: linear-gradient(145deg, #d8c4aa, #8e6849 55%, #3a2b21); }
 .feature-card, .product-card, .collection-card { background: var(--white); border: 1px solid var(--line); overflow: hidden; transition: transform .25s ease, box-shadow .25s ease; }
 .feature-card:hover, .product-card:hover, .collection-card:hover { box-shadow: var(--shadow); transform: translateY(-4px); }
+.product-card { position: relative; }
+.product-card .card-link::after { content: ""; cursor: pointer; inset: 0; position: absolute; z-index: 1; }
+.product-card .button-row { position: relative; z-index: 2; }
 .feature-card .image-placeholder, .product-card .image-placeholder { min-height: 300px; }
 .card-body { padding: 22px; }
 .card-body p { color: var(--muted); font-size: .88rem; margin-top: .55rem; }

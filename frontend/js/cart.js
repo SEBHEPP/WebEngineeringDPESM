@@ -117,6 +117,10 @@ function setupCheckoutPage() {
   });
 }
 
+function orderItemCount(order) {
+  return (order.items || []).reduce((sum, item) => sum + Number(item.quantity || 0), 0);
+}
+
 async function renderOrdersPage() {
   const body = document.getElementById("ordersBody");
   if (!body) return;
@@ -130,7 +134,7 @@ async function renderOrdersPage() {
         <tr>
           <td>#${order.id}</td>
           <td>${new Date(order.purchasedAt).toLocaleDateString("de-DE")}</td>
-          <td>${order.items?.length || "-"} Artikel</td>
+          <td>${orderItemCount(order)} Artikel</td>
           <td><span class="status green">Bestätigt</span></td>
           <td><span class="status green">Gesendet</span></td>
           <td>${formatPrice(order.totalPrice)}</td>

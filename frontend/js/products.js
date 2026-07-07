@@ -42,7 +42,7 @@ function productCard(product, linkPrefix = "") {
     <article class="product-card">
       <div class="image-placeholder">${productImage(product)}</div>
       <div class="card-body">
-        <a href="${linkPrefix}product-detail.html?id=${product.id}"><h3>${product.name}</h3></a>
+        <a class="card-link" href="${linkPrefix}product-detail.html?id=${product.id}"><h3>${product.name}</h3></a>
         <p>Produkt-ID ${product.id} · ${product.description || "Keine Beschreibung"}</p>
         <span class="status ${product.availableQuantity > 0 ? "green" : "red"}">${product.availableQuantity > 0 ? "Auf Lager" : "Nicht verfügbar"}</span>
         <div class="price">${formatPrice(product.price)}</div>
@@ -159,9 +159,17 @@ async function setupProductDetailPage() {
 
     const cartButton = box.querySelector("[data-add-cart]");
     cartButton.disabled = product.availableQuantity <= 0;
+    let addedToCart = false;
+
     cartButton.addEventListener("click", () => {
+      if (addedToCart) {
+        window.location.href = "cart.html";
+        return;
+      }
+
       addToCart(product);
-      cartButton.textContent = "Im Warenkorb";
+      addedToCart = true;
+      cartButton.textContent = "Zum Warenkorb";
     });
   } catch (error) {
     box.innerHTML = `<p class="session-hint error">${error.message}</p>`;

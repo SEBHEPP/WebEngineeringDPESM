@@ -233,9 +233,28 @@ async function listOrders(req, res, next) {
        ORDER BY purchased_at DESC`,
       [req.user.id]
     );
+    const orderIds = orderResult.rows.map((order) => order.id);
+    const itemsByOrderId = new Map();
+
+    if (orderIds.length > 0) {
+      const itemResult = await db.query(
+        `SELECT oi.order_id, oi.product_id, p.name, oi.quantity, oi.price_at_purchase
+         FROM order_items oi
+         LEFT JOIN products p ON p.id = oi.product_id
+         WHERE oi.order_id = ANY($1::int[])
+         ORDER BY oi.product_id ASC`,
+        [orderIds]
+      );
+
+      for (const row of itemResult.rows) {
+        const items = itemsByOrderId.get(row.order_id) || [];
+        items.push(toOrderItem(row));
+        itemsByOrderId.set(row.order_id, items);
+      }
+    }
 
     res.status(200).json({
-      orders: orderResult.rows.map((order) => toOrder(order))
+      orders: orderResult.rows.map((order) => toOrder(order, itemsByOrderId.get(order.id) || []))
     });
   } catch (error) {
     next(error);

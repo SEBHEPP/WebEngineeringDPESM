@@ -8,6 +8,7 @@ const ACTION_ALIASES = {
   berechtigung_setzen: "manage_permissions",
   block: "block",
   blockieren: "block",
+  buy: "buy",
   create: "create",
   create_admin: "create_admin",
   delete: "delete",
