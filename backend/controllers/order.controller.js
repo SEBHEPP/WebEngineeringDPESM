@@ -1,10 +1,7 @@
 // Felix
-const nodemailer = require("nodemailer");
-
 const db = require("../config/db");
+const { sendMail } = require("../config/mail");
 const authorizationService = require("../services/authorization.service");
-
-let mailTransporter;
 
 function createError(statusCode, message) {
   const error = new Error(message);
@@ -53,22 +50,6 @@ function normalizeItems(items) {
   }));
 }
 
-function getMailTransporter() {
-  if (!mailTransporter) {
-    mailTransporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST || "maildev",
-      port: Number(process.env.SMTP_PORT || 1025),
-      secure: false
-    });
-  }
-
-  return mailTransporter;
-}
-
-function getMailFrom() {
-  return process.env.SMTP_FROM || "no-reply@webshop.local";
-}
-
 function toOrder(row, items = []) {
   return {
     id: row.id,
@@ -94,8 +75,7 @@ async function sendOrderConfirmation(user, order) {
     .map((item) => `${item.quantity}x ${item.name} - ${item.lineTotal.toFixed(2)} EUR`)
     .join("\n");
 
-  await getMailTransporter().sendMail({
-    from: getMailFrom(),
+  await sendMail({
     to: user.email,
     subject: `Gentleman Shop - Bestellung #${order.id}`,
     text: `Danke fuer deine Bestellung.\n\n${lines}\n\nSumme: ${order.totalPrice.toFixed(2)} EUR`,

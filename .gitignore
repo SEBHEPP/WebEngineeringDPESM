@@ -8,6 +8,7 @@ npm-debug.log*
 # Environment files
 .env
 backend/.env
+backend/.env.production
 
 # Docker / local data
 postgres-data/

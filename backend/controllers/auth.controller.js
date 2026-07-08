@@ -1,9 +1,9 @@
 // Paul
 const crypto = require("crypto");
 const { promisify } = require("util");
-const nodemailer = require("nodemailer");
 
 const db = require("../config/db");
+const { sendMail } = require("../config/mail");
 
 const scryptAsync = promisify(crypto.scrypt);
 
@@ -12,8 +12,6 @@ const SESSION_DAYS = 7;
 const SESSION_MAX_AGE_MS = SESSION_DAYS * 24 * 60 * 60 * 1000;
 const MAGIC_CODE_MINUTES = 10;
 const magicCodes = new Map();
-
-let mailTransporter;
 
 function createError(statusCode, message) {
   const error = new Error(message);
@@ -270,36 +268,8 @@ async function findUserById(userId) {
   return result.rows[0] || null;
 }
 
-function getMailTransporter() {
-  if (!mailTransporter) {
-    mailTransporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST || "maildev",
-      port: Number(process.env.SMTP_PORT || 1025),
-      secure: false
-    });
-  }
-
-  return mailTransporter;
-}
-
-function getMailFrom() {
-  return process.env.SMTP_FROM || "no-reply@webshop.local";
-}
-
 function getAppBaseUrl() {
   return process.env.APP_BASE_URL || "http://localhost:3000";
-}
-
-async function sendMail({ to, subject, text, html }) {
-  const transporter = getMailTransporter();
-
-  await transporter.sendMail({
-    from: getMailFrom(),
-    to,
-    subject,
-    text,
-    html
-  });
 }
 
 function createVerificationToken(user) {
