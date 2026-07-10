@@ -1,6 +1,6 @@
-# UI-Planung / Mockup
+# Mockup
 
-## Ziel der Oberfläche
+## Ziel der Oberfläche (UI)
 
 Der Gentleman-Shop soll sauber, ruhig und hochwertig wirken. Die Seite soll nicht wie eine Demo aussehen, sondern wie ein kleiner echter Onlineshop für Herrenmode.
 
