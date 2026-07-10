@@ -1,9 +1,16 @@
 // Dennis
+
+// Wird ausgeführt sobald die HTML Seite geladen ist
+// Beide Funktionen prüfen intern selbst ob die nötigen DOM Elemente vorhanden sind
+
 document.addEventListener("DOMContentLoaded", () => {
-  setupMyWishlist();
-  setupWishlistDetail();
+  setupMyWishlist();    // Logik für wishlists.html (persönliche Liste)
+  setupWishlistDetail(); // Logik für wishlist-detail.html (geteilte Liste per ID)
 });
 
+// HTML Generierung
+
+// Gibt eine HTML Zeile für ein Produkt in der Wunschliste zurück
 function wishlistItemRow(item) {
   const image = item.imageUrl
     ? `<img src="${item.imageUrl}" alt="${item.name || ""}" loading="lazy" onerror="this.remove()">`
@@ -18,6 +25,8 @@ function wishlistItemRow(item) {
   `;
 }
 
+// Gibt eine HTML Zeile für einen Nutzer mit Berechtigung zurück
+// Owner bekommt keinen Entfernen Button (kann sich nicht selbst entfernen)
 function wishlistPermissionRow(permission) {
   return `
     <div>
@@ -27,31 +36,60 @@ function wishlistPermissionRow(permission) {
   `;
 }
 
+// Gibt eine HTML Zeile für eine mit dem Nutzer geteilte Wunschliste zurück
+function sharedWishlistRow(wishlist) {
+  return `
+    <div>
+      <span>${wishlist.name} - ${wishlist.role}</span>
+      <a class="btn small secondary" href="wishlist-detail.html?id=${wishlist.id}">Oeffnen</a>
+    </div>
+  `;
+}
+
+// wishlists.html (persönliche Wunschliste)
+
+// Richtet die persönliche Wunschlisten Seite ein
+// Bricht ab wenn die nötigen DOM Elemente nicht vorhanden sind
 function setupMyWishlist() {
   const page = document.getElementById("wishlistPage");
   const itemBox = document.getElementById("wishlistItems");
   if (!page || !itemBox) return;
 
   const permissionBox = document.getElementById("wishlistPermissions");
+  const sharedBox = document.getElementById("sharedWishlists");
   const permissionForm = document.getElementById("wishlistPermissionForm");
   const message = document.getElementById("wishlistMessage");
   const copyButton = document.getElementById("copyWishlistLink");
-  let wishlistId = null;
+  let wishlistId = null; // wird nach dem ersten render() gesetzt
 
+  // Lädt die persönliche Wunschliste vom Backend und rendert Produkte + Berechtigungen
   async function render() {
     try {
       const data = await apiRequest("/wishlists/me");
       const wishlist = data.wishlist;
-      wishlistId = wishlist.id;
+      wishlistId = wishlist.id; // ID für spätere API Aufrufe merken
+
+      // Produkte rendern
 
       itemBox.innerHTML = wishlist.items.length
         ? wishlist.items.map(wishlistItemRow).join("")
         : "<div class=\"empty-state\">Deine Wunschliste ist leer.</div>";
 
+      // Berechtigungen rendern (falls DOM Element vorhanden)
       if (permissionBox) {
         permissionBox.innerHTML = wishlist.permissions.map(wishlistPermissionRow).join("");
       }
 
+      // Mit dem Nutzer geteilte Wunschlisten laden und rendern (eigene Liste herausfiltern)
+      if (sharedBox) {
+        const sharedData = await apiRequest("/wishlists");
+        const sharedWishlists = (sharedData.wishlists || []).filter((entry) => entry.id !== wishlist.id);
+        sharedBox.innerHTML = sharedWishlists.length
+          ? sharedWishlists.map(sharedWishlistRow).join("")
+          : '<p class="session-hint">Aktuell wurde keine Wunschliste mit dir geteilt.</p>';
+      }
+
+      // Entfernen Buttons für Produkte werden nach jedem render() neu registriert
       itemBox.querySelectorAll("[data-remove-product]").forEach((button) => {
         button.addEventListener("click", async () => {
           await apiRequest(`/wishlists/${wishlistId}/products/${button.dataset.removeProduct}`, { method: "DELETE" });
@@ -59,6 +97,7 @@ function setupMyWishlist() {
         });
       });
 
+      // Entfernen Buttons für Berechtigungen
       permissionBox?.querySelectorAll("[data-remove-permission]").forEach((button) => {
         button.addEventListener("click", async () => {
           try {
@@ -71,9 +110,13 @@ function setupMyWishlist() {
       });
     } catch (error) {
       itemBox.innerHTML = `<p class="session-hint error">${error.message}</p>`;
+      if (sharedBox) {
+        sharedBox.innerHTML = '<p class="session-hint error">Geteilte Wunschlisten konnten nicht geladen werden.</p>';
+      }
     }
   }
 
+  // Formular: Anderen Nutzer zur Liste einladen (per userId + Rolle)
   permissionForm?.addEventListener("submit", async (event) => {
     event.preventDefault();
     if (!wishlistId) return;
@@ -91,6 +134,7 @@ function setupMyWishlist() {
     }
   });
 
+  // Button: Teilbaren Link zur Wunschlisten Detailseite kopieren
   copyButton?.addEventListener("click", async () => {
     if (!wishlistId) {
       setMessage(message, "Wunschliste noch nicht geladen.", "error");
@@ -107,20 +151,25 @@ function setupMyWishlist() {
     }
   });
 
-  render();
+  render(); // Initial laden
 }
 
+// wishlist-detail.html (geteilte Wunschliste per ID)
+
+// Richtet die Wunschlisten Detailseite ein
+// Die Wunschlisten ID kommt aus dem URL Parameter: ?id=123
 function setupWishlistDetail() {
   const page = document.getElementById("wishlistDetailPage");
   if (!page) return;
 
-  const wishlistId = getParam("id");
+  const wishlistId = getParam("id"); // aus api.js: liest URL Parameter
   const addForm = document.getElementById("wishlistAddProductForm");
   const permissionForm = document.getElementById("wishlistPermissionForm");
   let message = document.getElementById("wishlistDetailMessage");
   let itemBox = document.getElementById("wishlistItems");
   const permissionBox = document.getElementById("wishlistPermissions");
 
+  // Falls kein message Element im HTML vorhanden ist wird es dynamisch erzeugt
   if (!message) {
     message = document.createElement("p");
     message.className = "session-hint";
@@ -128,11 +177,12 @@ function setupWishlistDetail() {
     page.querySelector(".admin-tools")?.appendChild(message);
   }
 
+  // Falls kein itemBox Element vorhanden ist wird es im .table-card Container erzeugt
   if (!itemBox) {
     itemBox = document.createElement("div");
     itemBox.id = "wishlistItems";
     const tableCard = page.querySelector(".table-card");
-    tableCard.querySelectorAll(".cart-item").forEach((item) => item.remove());
+    tableCard.querySelectorAll(".cart-item").forEach((item) => item.remove()); // Platzhalter entfernen
     tableCard.appendChild(itemBox);
   }
 
@@ -140,11 +190,13 @@ function setupWishlistDetail() {
     permissionBox.innerHTML = "";
   }
 
+  // Wunschliste per ID vom Backend laden und rendern
   async function render() {
     try {
       const data = await apiRequest(`/wishlists/${wishlistId}`);
       const wishlist = data.wishlist;
 
+      // Titel und Eyebrow in der Seite aktualisieren
       const title = document.getElementById("wishlistTitle") || document.querySelector(".page-hero h1");
       const eyebrow = document.getElementById("wishlistEyebrow") || document.querySelector(".page-hero .eyebrow");
 
@@ -161,6 +213,7 @@ function setupWishlistDetail() {
         tableCard.appendChild(itemBox);
       }
 
+      // Produkte rendern
       itemBox.innerHTML = wishlist.items.length
         ? wishlist.items.map((item) => `
           <div class="cart-item">
@@ -171,6 +224,7 @@ function setupWishlistDetail() {
         `).join("")
         : "<div class=\"empty-state\">Keine Produkte in dieser Liste.</div>";
 
+      // Berechtigungen rendern
       document.getElementById("wishlistPermissions").innerHTML = wishlist.permissions.map((permission) => `
         <div>
           <span>${permission.email} · ${permission.role}</span>
@@ -178,6 +232,7 @@ function setupWishlistDetail() {
         </div>
       `).join("");
 
+      // Entfernen Buttons nach jedem render() neu registrieren
       document.querySelectorAll("[data-remove-product]").forEach((button) => {
         button.addEventListener("click", async () => {
           await apiRequest(`/wishlists/${wishlistId}/products/${button.dataset.removeProduct}`, { method: "DELETE" });
@@ -196,6 +251,7 @@ function setupWishlistDetail() {
     }
   }
 
+  // Formular: Produkt zur Wunschliste hinzufügen (per Produkt ID)
   addForm?.addEventListener("submit", async (event) => {
     event.preventDefault();
     const productInput = addForm.productId || addForm.addProductId;
@@ -212,6 +268,7 @@ function setupWishlistDetail() {
     }
   });
 
+  // Formular: Anderen Nutzer zur Liste einladen
   permissionForm?.addEventListener("submit", async (event) => {
     event.preventDefault();
     try {
@@ -229,6 +286,7 @@ function setupWishlistDetail() {
     }
   });
 
+  // Fehler falls kein ?id= Parameter in der URL vorhanden ist
   if (!wishlistId) {
     const title = document.getElementById("wishlistTitle") || document.querySelector(".page-hero h1");
     const eyebrow = document.getElementById("wishlistEyebrow") || document.querySelector(".page-hero .eyebrow");
@@ -240,5 +298,5 @@ function setupWishlistDetail() {
     return;
   }
 
-  render();
+  render(); // Initial laden
 }

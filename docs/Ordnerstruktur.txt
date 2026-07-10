@@ -1,63 +1,120 @@
 webshop-projekt/
 │
+├── .dockerignore            # Ignoriert unnötige Dateien für Docker-Builds
 ├── .gitignore               # Ignoriert node_modules, .env, .DS_Store etc.
-├── README.md                # Kurzanleitung: Wie startet man das Projekt?
-├── docker-compose.yml       # Das Herzstück (startet DB, Backend & ggf. Frontend-Server)
+├── Caddyfile                # Konfiguration für den Caddy Reverse Proxy (Produktion)
+├── README.md                # Kurzanleitung und Dokumentation
+├── docker-compose.yml       # Docker-Setup für lokale Entwicklung (DB, Backend, Maildev, pgAdmin)
+├── docker-compose.prod.yml  # Docker-Setup für Produktion (mit Caddy)
 │
-├── docs/                    # Hier landen eure Abgabedokumente (10 Punkte)
-│   ├── architektur.png      # Sebi
-│   ├── erm_modell.png       # Dennis
-│   ├── mockups.pdf          # Eli
-│   └── benutzerhandbuch.pdf # Eli
+├── bilder/                  # Bilder für die Dokumentation
+│   └── Aufgabeneinteilung.png
+│
+├── docs/                    # Abgabedokumente (10 Punkte)
+│   ├── ERM_Modell.png       
+│   ├── Prüfungsleistung.pdf 
+│   ├── architektur.png      
+│   ├── mockup.md        
+│   └── benutzerhandbuch.md 
 │
 ├── database/                # Datenbank-Setup (Dennis & Sebi)
-│   └── init.sql             # Wird von Docker beim ersten Start ausgeführt (erstellt Tabellen)
+│   └── init.sql             # Tabellen-Erstellung & Initialdaten (Dennis)
 │
-├── frontend/                # Vanilla HTML, CSS, JS (Eli Lead)
-│   ├── index.html           # Landingpage / Login
-│   ├── css/
-│   │   └── style.css        # Globale Styles, Responsive Design (20 Punkte)
-│   ├── js/
-│   │   ├── api.js           # GANZ WICHTIG: Zentrale Datei für alle fetch()-Aufrufe an das Backend
-│   │   ├── auto-check.js    # AUTO-1 Prüffläche im Admin-Dashboard
-│   │   ├── shop.js          # Logik für den Shop (Felix)
-│   │   └── wishlist.js      # Logik für die Wunschlisten (Dennis)
-│   └── pages/               # Weitere Ansichten
-│       ├── admin-dashboard.html
-│       ├── warenkorb.html
-│       └── wunschlisten.html
+├── frontend/                # Client-Seite (Vanilla HTML, CSS, JS - Eli)
+│   ├── index.html           # Landingpage / Login-Einstieg
+│   │
+│   ├── css/                 # Modulares CSS-Designsystem (20 Punkte)
+│   │   ├── base.css         # Reset & Basiselemente
+│   │   ├── components.css   # Buttons, Cards, Formulare etc.
+│   │   ├── layout.css       # Grid, Flexbox, Container, Header & Footer
+│   │   ├── pages.css        # Spezifische Styles für Unterseiten
+│   │   ├── responsive.css   # Media Queries
+│   │   ├── style.css        # Globaler Import der CSS-Dateien
+│   │   └── variables.css    # CSS-Variablen (Farben, Fonts, Abstände)
+│   │
+│   ├── js/                  # Frontend-Logik
+│   │   ├── admin.js         # Administration & Dashboard-Hilfsfunktionen (Eli, Sebi, Paul)
+│   │   ├── api.js           # Zentrale Datei für fetch()-Aufrufe an das Backend (Eli)
+│   │   ├── auth.js          # Authentifizierungs-Logik im Client (Paul)
+│   │   ├── auto-check.js    # AUTO-1 Prüffläche (Sebi / Eli)
+│   │   ├── cart.js          # Warenkorb-Logik (Felix)
+│   │   ├── products.js      # Produktkatalog & Detailseiten-Logik (Felix)
+│   │   └── wishlist.js      # Wunschlisten-Logik (Dennis)
+│   │
+│   ├── docs/                # UI/UX Planung und Dokumente
+│   │   ├── UI-Planung.md
+│   │   ├── ui-farbschema.png
+│   │   └── ui-farbschema.svg
+│   │
+│   └── pages/               # HTML-Seiten
+│       ├── admin/           # Admin-Bereich
+│       │   ├── dashboard.html
+│       │   ├── products.html
+│       │   └── users.html
+│       ├── auth/            # Authentifizierung
+│       │   ├── login.html
+│       │   ├── magic-login.html
+│       │   ├── register.html
+│       │   └── verify.html
+│       ├── legal/           # Rechtliches & Footer-Links
+│       │   ├── agb.html
+│       │   ├── cookie.html
+│       │   ├── datenschutz.html
+│       │   ├── impressum.html
+│       │   ├── kontakt.html
+│       │   ├── versand.html
+│       │   └── widerruf.html
+│       ├── shop/            # Shop & Kaufabwicklung
+│       │   ├── anzuege.html
+│       │   ├── cart.html
+│       │   ├── checkout.html
+│       │   ├── collection.html
+│       │   ├── hemden.html
+│       │   ├── orders.html
+│       │   ├── pflege.html
+│       │   ├── product-detail.html
+│       │   ├── products.html
+│       │   ├── schuhe.html
+│       │   ├── search.html
+│       │   └── zubehoer.html
+│       └── wishlist/        # Wunschlisten-Seiten
+│           ├── wishlist-detail.html
+│           └── wishlists.html
 │
-└── backend/                 # Node.js & Express (Sebi, Felix, Mr Eis, Dennis)
-    ├── Dockerfile           # Baut das Node.js Image
-    ├── package.json         # Dependencies (express, pg, nodemailer, etc.)
-    ├── server.js            # Startet den HTTP-Server
-    ├── app.js               # Express-Setup, Frontend-Auslieferung, API-Routing, Fehlerbehandlung
-    ├── .env.example         # Template für Umgebungsvariablen (DB-Passwort, Ports)
+└── backend/                 # API-Server (Node.js & Express - Sebi Lead)
+    ├── Dockerfile           # Baut das Node.js-Backend-Image
+    ├── package.json         # Dependencies & Scripts
+    ├── package-lock.json    # Lockfile für exakte Dependencies
+    ├── server.js            # Startet den HTTP-Server (Sebi)
+    ├── app.js               # Express-Setup, Routing & Global Middlewares (Sebi)
     │
-    ├── config/              
-    │   └── db.js            # Zentrale PostgreSQL-Verbindung
+    ├── config/              # Konfigurationen
+    │   ├── db.js            # Zentrale PostgreSQL-Verbindung (Dennis & Sebi)
+    │   └── mail.js          # Nodemailer SMTP-Konfiguration (Sebi)
     │
-    ├── middlewares/         
-    │   ├── errorHandler.js  # Zentrale Fehlerantworten
-    │   ├── notFoundHandler.js # API-404-Fallback
-    │   ├── checkAuth.js     # Geplant: Prüft, ob User eingeloggt ist (Mr Eis)
-    │   └── checkAuto.js     # Autorisierungsprüfung für geschützte Routen (Sebi)
+    ├── middlewares/         # Globale und spezifische Express-Middlewares
+    │   ├── checkAuto.js     # Autorisierungsprüfung für geschützte Routen (Sebi)
+    │   ├── errorHandler.js  # Zentrale API-Fehlerbehandlung (Sebi)
+    │   └── notFoundHandler.js # Fallback für nicht existierende API-Routen (Sebi)
     │
-    ├── routes/              # Hier arbeitet ihr parallel, ohne euch in die Quere zu kommen!
-    │   ├── index.js         # Sammelt alle API-Routen unter /api
-    │   ├── health.routes.js # Healthcheck inklusive Datenbankprüfung
-    │   ├── auto.routes.js   # AUTO-1 Entscheidungsinstanz
-    │   ├── auth.routes.js   # Geplant: Mr Eis (Login, Registrierung)
-    │   ├── user.routes.js   # Geplant: Mr Eis (Admin verwaltet User)
-    │   ├── inv.routes.js    # Geplant: Felix (Produkte, Warenkorb)
-    │   └── wun.routes.js    # Geplant: Dennis (Wunschlisten)
+    ├── routes/              # API-Routing (/api/...)
+    │   ├── index.js         # Haupt-Router (Sebi)
+    │   ├── auth.routes.js   # Login, Registrierung, Passwort (Paul)
+    │   ├── auto.routes.js   # AUTO-1 Entscheidungsinstanz (Sebi)
+    │   ├── health.routes.js # Server- & DB-Healthcheck (Sebi)
+    │   ├── order.routes.js  # Bestellungen (Felix)
+    │   ├── product.routes.js # Produktkatalog (Felix)
+    │   ├── user.routes.js   # User-Verwaltung für Admins (Paul)
+    │   └── wishlist.routes.js # Wunschlisten-Routen (Dennis)
     │
-    ├── controllers/         # Request-/Response-Logik hinter den Routen
-    │   ├── health.controller.js
-    │   ├── auto.controller.js
-    │   ├── auth.controller.js # Geplant
-    │   ├── inv.controller.js  # Geplant
-    │   └── ...
+    ├── controllers/         # Request-/Response-Logik
+    │   ├── auth.controller.js   # Auth-Controller & Token-Validation (Paul)
+    │   ├── auto.controller.js   # Autorisierungs-Controller (Sebi)
+    │   ├── health.controller.js # Healthcheck-Controller (Sebi)
+    │   ├── order.controller.js  # Bestellungs-Controller (Felix)
+    │   ├── product.controller.js # Produkt-Controller (Felix)
+    │   ├── user.controller.js   # User-Administration (Paul)
+    │   └── wishlist.controller.js # Wunschlisten-Controller (Dennis)
     │
-    └── services/            # Fachlogik und Datenbankoperationen
-        └── authorization.service.js # AUTO-1 Regeln und DB-Prüfungen
+    └── services/            # Fachlogik & Services
+        └── authorization.service.js # AUTO-1 Regeln und Berechtigungsprüfungen (Sebi)

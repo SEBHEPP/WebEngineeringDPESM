@@ -2,7 +2,7 @@
 
 ## Aufgabeneinteilung
 
-![Aufgabeneinteilung](Bilder/Aufgabeneinteilung.png)
+![Aufgabeneinteilung](docs/Aufgabeneinteilung.png)
 
 ## Schnittstellen Diagramm
 
@@ -230,8 +230,6 @@ docker compose up --build
 
 
 # Gentleman Shop Frontend
-
-> Die vollständige Planung der UI mit Seitenstruktur, Farbschema, Responsive-Konzept und Verlinkungsdiagrammen befindet sich in [`docs/UI-Planung.md`](docs/UI-Planung.md).
 
 Statisches HTML/CSS-Frontend für das Web-Engineering-Projekt.
 

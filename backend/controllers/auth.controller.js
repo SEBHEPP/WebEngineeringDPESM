@@ -117,7 +117,9 @@ function signToken(payload, expiresInSeconds) {
   const now = Math.floor(Date.now() / 1000);
   const tokenPayload = {
     ...payload,
+  //issued at
     iat: now,
+  //expires at
     exp: now + expiresInSeconds
   };
 
@@ -178,6 +180,7 @@ function getCookieValue(req, cookieName) {
     return null;
   }
 
+  // CookieName=
   return decodeURIComponent(cookie.substring(cookieName.length + 1));
 }
 

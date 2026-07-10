@@ -119,10 +119,6 @@ function setupProductsPage() {
     render();
   });
 
-  form?.querySelector("[name='q']")?.addEventListener("input", () => {
-    render();
-  });
-
   form?.querySelector("[name='productId']")?.addEventListener("change", () => {
     render();
   });
@@ -183,7 +179,8 @@ async function setupProductDetailPage() {
         }
 
         try {
-          await apiRequest("/wishlists/me/items", {
+          const { wishlist } = await apiRequest("/wishlists/me");
+          await apiRequest(`/wishlists/${wishlist.id}/items`, {
             method: "POST",
             body: JSON.stringify({ productId: product.id })
           });
