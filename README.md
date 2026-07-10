@@ -2,7 +2,7 @@
 
 ## Aufgabeneinteilung
 
-![Aufgabeneinteilung](Bilder/Aufgabeneinteilung.png)
+![Aufgabeneinteilung](docs/Aufgabeneinteilung.png)
 
 ## Schnittstellen Diagramm
 

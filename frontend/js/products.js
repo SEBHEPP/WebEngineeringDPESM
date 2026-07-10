@@ -183,7 +183,8 @@ async function setupProductDetailPage() {
         }
 
         try {
-          await apiRequest("/wishlists/me/items", {
+          const { wishlist } = await apiRequest("/wishlists/me");
+          await apiRequest(`/wishlists/${wishlist.id}/items`, {
             method: "POST",
             body: JSON.stringify({ productId: product.id })
           });

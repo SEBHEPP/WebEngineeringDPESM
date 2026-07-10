@@ -9,9 +9,8 @@ const router = express.Router();
 
 router.get("/", authenticate, wishlistController.listWishlists);
 
-// Persoenliche Wunschliste (eine pro Nutzer, wie der Warenkorb) - muss vor "/:id" stehen
+// Persoenliche Wunschliste (eine pro Nutzer) - muss vor "/:id" stehen
 router.get("/me", authenticate, wishlistController.getMyWishlist);
-router.post("/me/items", authenticate, wishlistController.addProductToMyWishlist);
 
 router.post(
   "/",
