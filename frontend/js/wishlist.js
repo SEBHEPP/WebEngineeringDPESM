@@ -1,4 +1,4 @@
-// Dennis
+// Elias
 document.addEventListener("DOMContentLoaded", () => {
   setupMyWishlist();
   setupWishlistDetail();
@@ -27,12 +27,22 @@ function wishlistPermissionRow(permission) {
   `;
 }
 
+function sharedWishlistRow(wishlist) {
+  return `
+    <div>
+      <span>${wishlist.name} - ${wishlist.role}</span>
+      <a class="btn small secondary" href="wishlist-detail.html?id=${wishlist.id}">Oeffnen</a>
+    </div>
+  `;
+}
+
 function setupMyWishlist() {
   const page = document.getElementById("wishlistPage");
   const itemBox = document.getElementById("wishlistItems");
   if (!page || !itemBox) return;
 
   const permissionBox = document.getElementById("wishlistPermissions");
+  const sharedBox = document.getElementById("sharedWishlists");
   const permissionForm = document.getElementById("wishlistPermissionForm");
   const message = document.getElementById("wishlistMessage");
   const copyButton = document.getElementById("copyWishlistLink");
@@ -50,6 +60,14 @@ function setupMyWishlist() {
 
       if (permissionBox) {
         permissionBox.innerHTML = wishlist.permissions.map(wishlistPermissionRow).join("");
+      }
+
+      if (sharedBox) {
+        const sharedData = await apiRequest("/wishlists");
+        const sharedWishlists = (sharedData.wishlists || []).filter((entry) => entry.id !== wishlist.id);
+        sharedBox.innerHTML = sharedWishlists.length
+          ? sharedWishlists.map(sharedWishlistRow).join("")
+          : '<p class="session-hint">Aktuell wurde keine Wunschliste mit dir geteilt.</p>';
       }
 
       itemBox.querySelectorAll("[data-remove-product]").forEach((button) => {
@@ -71,6 +89,9 @@ function setupMyWishlist() {
       });
     } catch (error) {
       itemBox.innerHTML = `<p class="session-hint error">${error.message}</p>`;
+      if (sharedBox) {
+        sharedBox.innerHTML = '<p class="session-hint error">Geteilte Wunschlisten konnten nicht geladen werden.</p>';
+      }
     }
   }
 

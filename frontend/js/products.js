@@ -119,10 +119,6 @@ function setupProductsPage() {
     render();
   });
 
-  form?.querySelector("[name='q']")?.addEventListener("input", () => {
-    render();
-  });
-
   form?.querySelector("[name='productId']")?.addEventListener("change", () => {
     render();
   });

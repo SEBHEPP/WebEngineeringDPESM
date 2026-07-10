@@ -9,6 +9,12 @@ function cartTotal(cart) {
   return cart.reduce((sum, item) => sum + Number(item.price) * item.quantity, 0);
 }
 
+function cartImage(item) {
+  if (!item.imageUrl) return "";
+
+  return `<img src="${item.imageUrl}" alt="${item.name}" loading="lazy" onerror="this.remove()">`;
+}
+
 function updateCartSummary(cart) {
   const total = document.getElementById("cartTotal");
   const subtotal = document.getElementById("cartSubtotal");
@@ -38,7 +44,7 @@ function renderCartPage() {
   list.innerHTML = cart.length
     ? cart.map((item) => `
       <div class="cart-item">
-        <div class="image-placeholder"></div>
+        <div class="image-placeholder">${cartImage(item)}</div>
         <div>
           <h3>${item.name}</h3>
           <p>Produkt-ID ${item.productId} · Menge ${item.quantity}</p>
@@ -71,7 +77,7 @@ function setupCheckoutPage() {
   list.innerHTML = cart.length
     ? cart.map((item) => `
       <div class="cart-item">
-        <div class="image-placeholder"></div>
+        <div class="image-placeholder">${cartImage(item)}</div>
         <div><strong>${item.name}</strong><p>Menge ${item.quantity}</p></div>
         <strong>${formatPrice(Number(item.price) * item.quantity)}</strong>
       </div>

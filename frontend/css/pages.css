@@ -53,6 +53,7 @@
 .info-list { color: var(--muted); display: grid; font-size: .84rem; gap: 10px; margin-top: 28px; }
 .info-list div, .summary-line { border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; padding: 11px 0; }
 .cart-layout, .admin-layout, .wishlist-layout { align-items: start; display: grid; gap: 28px; grid-template-columns: 1fr 350px; }
+.full-width { grid-column: 1 / -1; }
 .checkout-grid { align-items: start; display: grid; gap: 30px; grid-template-columns: 1fr 390px; }
 .table-card, .summary-card, .panel-card, .search-page-box { padding: 26px; }
 .summary-card { position: sticky; top: 110px; }
