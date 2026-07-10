@@ -7,6 +7,7 @@ function createError(statusCode, message) {
   return error;
 }
 
+// Prüft und säubert Produkt-IDs
 function normalizeId(id, fieldName = "id") {
   const normalizedId = Number(id);
 
@@ -17,6 +18,7 @@ function normalizeId(id, fieldName = "id") {
   return normalizedId;
 }
 
+// Prüft Textfelder und entfernt Leerzeichen
 function normalizeText(value, fieldName) {
   if (!value || typeof value !== "string" || value.trim().length === 0) {
     throw createError(400, `${fieldName} is required`);
@@ -25,6 +27,7 @@ function normalizeText(value, fieldName) {
   return value.trim();
 }
 
+// Stellt sicher, dass der Preis eine gültige, positive Zahl ist
 function normalizePrice(value) {
   const price = Number(value);
 
@@ -35,6 +38,7 @@ function normalizePrice(value) {
   return price;
 }
 
+// Stellt sicher, dass der Lagerbestand eine gültige, positive Ganzzahl ist
 function normalizeQuantity(value) {
   const quantity = Number(value);
 
@@ -45,6 +49,7 @@ function normalizeQuantity(value) {
   return quantity;
 }
 
+// Formatiert die Bild-URL oder gibt null zurück
 function normalizeImageUrl(value) {
   if (value === undefined || value === null) {
     return null;
@@ -55,6 +60,7 @@ function normalizeImageUrl(value) {
   return imageUrl.length > 0 ? imageUrl : null;
 }
 
+// Übersetzt snake_case in JavaScript-Variablen camelCase
 function toProduct(row) {
   return {
     id: row.id,
@@ -67,6 +73,8 @@ function toProduct(row) {
   };
 }
 
+// Ruft eine Liste von Produkten ab 
+// Erlaubt Suche per Text, Filterung nach Min/Max-Preis und Sortierung
 async function listProducts(req, res, next) {
   try {
     const params = [];
@@ -116,6 +124,7 @@ async function listProducts(req, res, next) {
   }
 }
 
+// Ruft ein einzelnes Produkt anhand seiner eindeutigen ID ab 
 async function getProductById(req, res, next) {
   try {
     const productId = normalizeId(req.params.id, "productId");
@@ -137,6 +146,7 @@ async function getProductById(req, res, next) {
   }
 }
 
+// Erstellt ein neues Produkt in der Datenbank nach vorheriger Validierung der Daten
 async function createProduct(req, res, next) {
   try {
     const name = normalizeText(req.body.name, "name");
@@ -161,6 +171,7 @@ async function createProduct(req, res, next) {
   }
 }
 
+// Aktualisiert ein Produkt, indem es fehlende Eingabewerte automatisch durch die bestehenden Daten aus der Datenbank ersetzt
 async function updateProduct(req, res, next) {
   try {
     const productId = normalizeId(req.params.id, "productId");
@@ -203,6 +214,8 @@ async function updateProduct(req, res, next) {
   }
 }
 
+// Löscht ein Produkt anhand seiner ID aus der Datenbank 
+// Gibt die Daten des gelöschten Artikels zurück
 async function deleteProduct(req, res, next) {
   try {
     const productId = normalizeId(req.params.id, "productId");

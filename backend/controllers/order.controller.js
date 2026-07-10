@@ -1,7 +1,7 @@
 // Felix
-const db = require("../config/db");
-const { sendMail } = require("../config/mail");
-const authorizationService = require("../services/authorization.service");
+const db = require("../config/db"); // Für Datenbank-Abfragen
+const { sendMail } = require("../config/mail"); // Für das Versenden von E-Mails
+const authorizationService = require("../services/authorization.service"); // Für Rechteprüfung
 
 function createError(statusCode, message) {
   const error = new Error(message);
@@ -9,6 +9,7 @@ function createError(statusCode, message) {
   return error;
 }
 
+// Validiert und konvertiert eine ID in eine positive Ganzzahl
 function normalizeId(id, fieldName = "id") {
   const normalizedId = Number(id);
 
@@ -19,6 +20,7 @@ function normalizeId(id, fieldName = "id") {
   return normalizedId;
 }
 
+// Stellt sicher, dass die Menge eine positive Ganzzahl ist
 function normalizeQuantity(quantity) {
   const normalizedQuantity = Number(quantity);
 
@@ -29,6 +31,7 @@ function normalizeQuantity(quantity) {
   return normalizedQuantity;
 }
 
+// Validiert Items und fasst gleiche Produkte zusammen
 function normalizeItems(items) {
   if (!Array.isArray(items) || items.length === 0) {
     throw createError(400, "items are required");
@@ -50,6 +53,7 @@ function normalizeItems(items) {
   }));
 }
 
+// Formatiert eine Order-Datenbankzeile zu einem API-Objekt
 function toOrder(row, items = []) {
   return {
     id: row.id,
@@ -60,6 +64,7 @@ function toOrder(row, items = []) {
   };
 }
 
+// Formatiert ein einzelnes Order-Item zu einem API-Objekt
 function toOrderItem(row) {
   return {
     productId: row.product_id,
@@ -70,6 +75,7 @@ function toOrderItem(row) {
   };
 }
 
+// Sendet eine Bestellbestätigung per E-Mail
 async function sendOrderConfirmation(user, order) {
   const lines = order.items
     .map((item) => `${item.quantity}x ${item.name} - ${item.lineTotal.toFixed(2)} EUR`)
@@ -90,6 +96,7 @@ async function sendOrderConfirmation(user, order) {
   });
 }
 
+// Prüft, ob der Nutzer das Produkt kaufen darf (Rechteprüfung)
 async function checkProductPermission(userId, productId) {
   const decision = await authorizationService.checkPermission({
     userId,
@@ -103,6 +110,7 @@ async function checkProductPermission(userId, productId) {
   }
 }
 
+// Erstellt eine neue Bestellung (inkl. Produktprüfung, Lagerbestand, E-Mail)
 async function createOrder(req, res, next) {
   const client = await db.pool.connect();
   let transactionStarted = false;
@@ -204,6 +212,7 @@ async function createOrder(req, res, next) {
   }
 }
 
+// Listet alle Bestellungen des eingeloggten Nutzers auf
 async function listOrders(req, res, next) {
   try {
     const orderResult = await db.query(
@@ -241,6 +250,7 @@ async function listOrders(req, res, next) {
   }
 }
 
+// Holt eine einzelne Bestellung inkl. aller Items
 async function getOrderById(req, res, next) {
   try {
     const orderId = normalizeId(req.params.id, "orderId");
