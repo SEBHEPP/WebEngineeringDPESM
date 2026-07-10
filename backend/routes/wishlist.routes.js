@@ -5,13 +5,17 @@ const wishlistController = require("../controllers/wishlist.controller");
 const { authenticate } = require("../controllers/auth.controller");
 const checkAuto = require("../middlewares/checkAuto");
 
+// authenticate: prüft ob der Nutzer eingeloggt ist (Session-Cookie)
+// checkAuto: prüft zusätzlich ob der Nutzer die nötige Berechtigung für diese Liste hat
 const router = express.Router();
 
+// Alle eigenen Wunschlisten auflisten (als Owner oder mit geteiltem Zugriff)
 router.get("/", authenticate, wishlistController.listWishlists);
 
-// Persoenliche Wunschliste (eine pro Nutzer) - muss vor "/:id" stehen
+// Persönliche Wunschliste abrufen, wird automatisch angelegt falls noch keine existiert
 router.get("/me", authenticate, wishlistController.getMyWishlist);
 
+// Neue Wunschliste erstellen
 router.post(
   "/",
   checkAuto({
@@ -21,6 +25,7 @@ router.post(
   wishlistController.createWishlist
 );
 
+// Eine bestimmte Wunschliste per ID abrufen (nur wenn Leseberechtigung vorhanden)
 router.get(
   "/:id",
   checkAuto({
@@ -30,6 +35,7 @@ router.get(
   wishlistController.getWishlistById
 );
 
+// Produkt zu einer Wunschliste hinzufügen (benötigt write- oder owner-Berechtigung)
 router.post(
   "/:id/items",
   checkAuto({
@@ -39,6 +45,7 @@ router.post(
   wishlistController.addProduct
 );
 
+// Alias für /:id/items (alternative URL)
 router.post(
   "/:id/products",
   checkAuto({
@@ -48,6 +55,7 @@ router.post(
   wishlistController.addProduct
 );
 
+// Produkt aus einer Wunschliste entfernen
 router.delete(
   "/:id/items/:productId",
   checkAuto({
@@ -57,6 +65,7 @@ router.delete(
   wishlistController.removeProduct
 );
 
+// Alias für /:id/items/:productId 
 router.delete(
   "/:id/products/:productId",
   checkAuto({
@@ -66,6 +75,7 @@ router.delete(
   wishlistController.removeProduct
 );
 
+// Berechtigung für einen anderen Nutzer setzen oder aktualisieren (nur Owner)
 router.post(
   "/:id/permissions",
   checkAuto({
@@ -75,6 +85,7 @@ router.post(
   wishlistController.setPermission
 );
 
+// Berechtigung per PUT aktualisieren (z.B. read -> write)
 router.put(
   "/:id/permissions/:userId",
   checkAuto({
@@ -84,6 +95,7 @@ router.put(
   wishlistController.setPermission
 );
 
+// Berechtigung eines Nutzers entfernen
 router.delete(
   "/:id/permissions/:userId",
   checkAuto({
@@ -93,6 +105,7 @@ router.delete(
   wishlistController.removePermission
 );
 
+// Gesamte Wunschliste löschen (nur Owner)
 router.delete(
   "/:id",
   checkAuto({

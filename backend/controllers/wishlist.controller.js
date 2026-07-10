@@ -1,12 +1,14 @@
 // Dennis
 const db = require("../config/db");
 
+// Erzeugt einen Fehler mit HTTP Statuscode der von errorHandler.js aufgegriffen wird
 function createError(statusCode, message) {
   const error = new Error(message);
   error.statusCode = statusCode;
   return error;
 }
 
+// Validiert eine numerische ID (zB wishlistId, productId)
 function normalizeId(id, fieldName = "id") {
   const normalizedId = Number(id);
 
@@ -17,6 +19,7 @@ function normalizeId(id, fieldName = "id") {
   return normalizedId;
 }
 
+// Validiert ein Pflicht Textfeld (zB Wunschlisten Name, darf nicht leer sein)
 function normalizeText(value, fieldName) {
   if (!value || typeof value !== "string" || value.trim().length === 0) {
     throw createError(400, `${fieldName} is required`);
@@ -25,6 +28,7 @@ function normalizeText(value, fieldName) {
   return value.trim();
 }
 
+// Validiert die Berechtigung, nur "read" oder "write" sind erlaubt, nicht "owner" 
 function normalizeRole(role) {
   const normalizedRole = String(role || "").trim().toLowerCase();
 
@@ -35,6 +39,7 @@ function normalizeRole(role) {
   return normalizedRole;
 }
 
+// Wandelt eine DB Zeile in das Wunschlisten Format für die API Antwort um
 function toWishlist(row, items = [], permissions = []) {
   return {
     id: row.id,
@@ -46,6 +51,7 @@ function toWishlist(row, items = [], permissions = []) {
   };
 }
 
+// Wandelt eine DB Zeile (aus wishlist_items JOIN products) in ein Produkt Objekt um
 function toItem(row) {
   return {
     productId: row.product_id,
@@ -58,6 +64,7 @@ function toItem(row) {
   };
 }
 
+// Wandelt eine DB Zeile (aus wishlist_permissions JOIN users) in ein Berechtigungs Objekt um
 function toPermission(row) {
   return {
     userId: row.user_id,
@@ -65,6 +72,8 @@ function toPermission(row) {
     role: row.role
   };
 }
+
+// Datenbank Abfragen
 
 async function productExists(productId) {
   const result = await db.query("SELECT id FROM products WHERE id = $1", [productId]);
@@ -78,6 +87,7 @@ async function userExists(userId) {
   return Boolean(result.rows[0]);
 }
 
+// Gibt alle Produkte einer Wunschliste zurück (inkl. aktuelle Produktdaten via JOIN)
 async function getWishlistItems(wishlistId) {
   const result = await db.query(
     `SELECT wi.product_id, wi.added_at, p.name, p.description, p.price, p.available_quantity, p.image_url
@@ -91,6 +101,7 @@ async function getWishlistItems(wishlistId) {
   return result.rows.map(toItem);
 }
 
+// Gibt alle Nutzer zurück, die Zugriff auf eine Wunschliste haben (inkl. E-Mail via JOIN)
 async function getWishlistPermissions(wishlistId) {
   const result = await db.query(
     `SELECT wp.user_id, u.email, wp.role
@@ -104,7 +115,7 @@ async function getWishlistPermissions(wishlistId) {
   return result.rows.map(toPermission);
 }
 
-// Jeder Nutzer hat genau eine persoenliche Wunschliste (wird bei Bedarf angelegt).
+// Gibt die persönliche Wunschliste des Nutzers zurück
 async function getOrCreateMyWishlist(userId) {
   const existing = await db.query(
     `SELECT w.id, w.name, w.description, w.created_at
@@ -133,6 +144,7 @@ async function getOrCreateMyWishlist(userId) {
     );
     const wishlist = wishlistResult.rows[0];
 
+    // Ersteller erhält automatisch die "owner" Berechtigung
     await client.query(
       `INSERT INTO wishlist_permissions (wishlist_id, user_id, role)
        VALUES ($1, $2, 'owner')`,
@@ -150,6 +162,9 @@ async function getOrCreateMyWishlist(userId) {
   }
 }
 
+// Controller-Funktionen
+
+// GET /wishlists/me: persönliche Wunschliste mit allen Produkten und Berechtigungen
 async function getMyWishlist(req, res, next) {
   try {
     const wishlist = await getOrCreateMyWishlist(req.user.id);
@@ -164,6 +179,8 @@ async function getMyWishlist(req, res, next) {
   }
 }
 
+// POST /wishlists/:id/items: Produkt zur persönlichen Wunschliste hinzufügen
+// Nutzt ON CONFLICT DO NOTHING: doppeltes Hinzufügen wird stillschweigend ignoriert
 async function addProductToMyWishlist(req, res, next) {
   try {
     const productId = normalizeId(req.body.productId ?? req.body.product_id, "productId");
@@ -191,6 +208,8 @@ async function addProductToMyWishlist(req, res, next) {
   }
 }
 
+// POST /wishlists: neue Wunschliste erstellen
+// Wunschliste + Owner-Berechtigung werden atomar in einer Transaktion angelegt
 async function createWishlist(req, res, next) {
   const client = await db.pool.connect();
   let transactionStarted = false;
@@ -210,6 +229,7 @@ async function createWishlist(req, res, next) {
     );
     const wishlist = wishlistResult.rows[0];
 
+    // Ersteller wird automatisch Owner
     await client.query(
       `INSERT INTO wishlist_permissions (wishlist_id, user_id, role)
        VALUES ($1, $2, 'owner')`,
@@ -240,6 +260,7 @@ async function createWishlist(req, res, next) {
   }
 }
 
+// GET /wishlists: alle Wunschlisten des Nutzers (eigene + geteilte)
 async function listWishlists(req, res, next) {
   try {
     const result = await db.query(
@@ -265,6 +286,7 @@ async function listWishlists(req, res, next) {
   }
 }
 
+// GET /wishlists/:id: eine bestimmte Wunschliste mit Produkten und Berechtigungen
 async function getWishlistById(req, res, next) {
   try {
     const wishlistId = normalizeId(req.params.id, "wishlistId");
@@ -289,6 +311,8 @@ async function getWishlistById(req, res, next) {
   }
 }
 
+// POST /wishlists/:id/items: Produkt zu einer bestimmten Wunschliste hinzufügen
+// ON CONFLICT DO NOTHING -> Produkt ist bereits in der Liste (kein Fehler)
 async function addProduct(req, res, next) {
   try {
     const wishlistId = normalizeId(req.params.id, "wishlistId");
@@ -315,6 +339,7 @@ async function addProduct(req, res, next) {
   }
 }
 
+// DELETE /wishlists/:id/products/:productId: Produkt aus Wunschliste entfernen
 async function removeProduct(req, res, next) {
   try {
     const wishlistId = normalizeId(req.params.id, "wishlistId");
@@ -340,6 +365,7 @@ async function removeProduct(req, res, next) {
   }
 }
 
+// DELETE /wishlists/:id: gesamte Wunschliste löschen (ON DELETE CASCADE entfernt auch Einträge und Berechtigungen)
 async function deleteWishlist(req, res, next) {
   try {
     const wishlistId = normalizeId(req.params.id, "wishlistId");
@@ -364,12 +390,15 @@ async function deleteWishlist(req, res, next) {
   }
 }
 
+// POST /wishlists/:id/permissions: Berechtigung für einen Nutzer setzen (oder aktualisieren)
+// ON CONFLICT DO UPDATE -> bestehende Berechtigung wird überschrieben (zB read -> write)
 async function setPermission(req, res, next) {
   try {
     const wishlistId = normalizeId(req.params.id, "wishlistId");
     const userId = normalizeId(req.body.userId ?? req.params.userId, "userId");
     const role = normalizeRole(req.body.role);
 
+    // Owner Berechtigung kann nicht überschrieben werden
     if (req.user.id === userId) {
       throw createError(400, "owner permission cannot be changed here");
     }
@@ -396,6 +425,8 @@ async function setPermission(req, res, next) {
   }
 }
 
+// DELETE /wishlists/:id/permissions/:userId: Berechtigung eines Nutzers entfernen
+// WHERE role <> 'owner' stellt sicher dass der Owner sich nicht selbst entfernen kann
 async function removePermission(req, res, next) {
   try {
     const wishlistId = normalizeId(req.params.id, "wishlistId");
