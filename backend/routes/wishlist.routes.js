@@ -15,6 +15,12 @@ router.get("/", authenticate, wishlistController.listWishlists);
 // Persönliche Wunschliste abrufen, wird automatisch angelegt falls noch keine existiert
 router.get("/me", authenticate, wishlistController.getMyWishlist);
 
+// Name/Beschreibung der eigenen Wunschliste ändern
+router.patch("/me", authenticate, wishlistController.updateMyWishlist);
+
+// Produkt zur eigenen Wunschliste hinzufügen (von der Produktseite)
+router.post("/me/items", authenticate, wishlistController.addProductToMyWishlist);
+
 // Neue Wunschliste erstellen
 router.post(
   "/",

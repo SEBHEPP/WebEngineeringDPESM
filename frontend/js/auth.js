@@ -56,7 +56,10 @@ function setupRegister() {
         })
       });
 
-      setMessage(message, "Registrierung erfolgreich. Prüfe Maildev für den Bestätigungslink.", "success");
+      setMessage(message, "Registrierung erfolgreich. Wir haben dir einen Bestätigungslink per E-Mail geschickt. Du wirst zum Login weitergeleitet.", "success");
+      window.setTimeout(() => {
+        window.location.href = "login.html";
+      }, 1800);
     } catch (error) {
       setMessage(message, error.message, "error");
     }
@@ -81,7 +84,7 @@ function setupMagicLogin() {
         body: JSON.stringify({ email: requestForm.email.value })
       });
 
-      setMessage(message, "Code wurde gesendet. Prüfe Maildev.", "success");
+      setMessage(message, "Code wurde per E-Mail gesendet. Prüfe dein Postfach.", "success");
     } catch (error) {
       setMessage(message, error.message, "error");
     }
@@ -114,7 +117,7 @@ async function setupVerifyPage() {
   const token = getParam("token");
 
   if (!token) {
-    box.innerHTML = "<p class=\"session-hint\">Öffne den Bestätigungslink aus Maildev.</p>";
+    box.innerHTML = "<p class=\"session-hint\">Öffne den Bestätigungslink aus deiner E-Mail.</p>";
     return;
   }
 

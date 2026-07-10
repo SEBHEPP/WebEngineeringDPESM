@@ -123,8 +123,16 @@ function setupCheckoutPage() {
   });
 }
 
-function orderItemCount(order) {
-  return (order.items || []).reduce((sum, item) => sum + Number(item.quantity || 0), 0);
+function orderItemsList(order) {
+  const items = order.items || [];
+  if (!items.length) return "-";
+
+  return items.map((item) => {
+    const label = `${item.quantity}× ${item.name || "Gelöschtes Produkt"}`;
+    return item.productId
+      ? `<a href="product-detail.html?id=${item.productId}">${label}</a>`
+      : label;
+  }).join("<br>");
 }
 
 async function renderOrdersPage() {
@@ -140,7 +148,7 @@ async function renderOrdersPage() {
         <tr>
           <td>#${order.id}</td>
           <td>${new Date(order.purchasedAt).toLocaleDateString("de-DE")}</td>
-          <td>${orderItemCount(order)} Artikel</td>
+          <td>${orderItemsList(order)}</td>
           <td><span class="status green">Bestätigt</span></td>
           <td><span class="status green">Gesendet</span></td>
           <td>${formatPrice(order.totalPrice)}</td>

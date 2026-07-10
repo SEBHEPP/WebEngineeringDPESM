@@ -39,23 +39,30 @@
     <div class="container">
       <p class="eyebrow">Suche</p>
       <h1>Produkte suchen</h1>
-      <p class="lead">Platzhalter für die spätere Produktsuche über das Inventarsystem.</p>
+      <p class="lead">Suche nach Namen und grenze zusätzlich die Preisspanne ein.</p>
     </div>
   </section>
   <section class="section" style="padding-top:26px">
     <div class="container">
       <form class="search-page-box" id="productSearchForm">
-        <div class="field">
-          <label>Suchbegriff</label>
-          <input name="q" placeholder="Zum Beispiel Anzug, Schuh, Pflege">
+        <div class="form-grid">
+          <div class="field full">
+            <label>Suchbegriff</label>
+            <input name="q" placeholder="Zum Beispiel Anzug, Schuh, Pflege">
+          </div>
+          <div class="field">
+            <label>Preis von (€)</label>
+            <input name="minPrice" type="number" min="0" step="0.01" placeholder="0">
+          </div>
+          <div class="field">
+            <label>Preis bis (€)</label>
+            <input name="maxPrice" type="number" min="0" step="0.01" placeholder="500">
+          </div>
         </div>
         <button class="btn" type="submit" style="margin-top:16px">Suchen</button>
       </form>
       <div class="products-grid" id="productsGrid" style="margin-top:28px">
-        <article class="product-card"><div class="image-placeholder"></div><div class="card-body"><a href="product-detail.html"><h3>Anzug Milano</h3></a><p>Moderner Schnitt in Anthrazit.</p><div class="price">249,90 €</div></div></article>
-<article class="product-card"><div class="image-placeholder"></div><div class="card-body"><a href="product-detail.html"><h3>Hemd Oxford</h3></a><p>Klassisches Hemd für Business und Freizeit.</p><div class="price">59,90 €</div></div></article>
-<article class="product-card"><div class="image-placeholder"></div><div class="card-body"><a href="product-detail.html"><h3>Lederschuh Noir</h3></a><p>Schlichter Schuh für elegante Looks.</p><div class="price">129,90 €</div></div></article>
-
+        <p class="session-hint">Gib einen Suchbegriff oder eine Preisspanne ein.</p>
       </div>
     </div>
   </section>

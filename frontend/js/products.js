@@ -47,7 +47,9 @@ function productCard(product, linkPrefix = "") {
         <span class="status ${product.availableQuantity > 0 ? "green" : "red"}">${product.availableQuantity > 0 ? "Auf Lager" : "Nicht verfügbar"}</span>
         <div class="price">${formatPrice(product.price)}</div>
         <div class="button-row" style="margin-top:14px">
-          <button class="btn small" data-cart-id="${product.id}" type="button">Warenkorb</button>
+          ${product.availableQuantity > 0
+            ? `<button class="btn small" data-cart-id="${product.id}" type="button">Warenkorb</button>`
+            : `<button class="btn small" type="button" disabled>Ausverkauft</button>`}
         </div>
       </div>
     </article>
@@ -103,6 +105,8 @@ function setupProductsPage() {
       } else {
         products = await loadProducts({
           q: form?.querySelector("[name='q']")?.value,
+          minPrice: form?.querySelector("[name='minPrice']")?.value,
+          maxPrice: form?.querySelector("[name='maxPrice']")?.value,
           sort: sortInput?.value
         });
       }
@@ -154,7 +158,9 @@ async function setupProductDetailPage() {
     if (galleryMain) galleryMain.innerHTML = productImage(product);
 
     const cartButton = box.querySelector("[data-add-cart]");
-    cartButton.disabled = product.availableQuantity <= 0;
+    const soldOut = product.availableQuantity <= 0;
+    cartButton.disabled = soldOut;
+    if (soldOut) cartButton.textContent = "Ausverkauft";
     let addedToCart = false;
 
     cartButton.addEventListener("click", () => {
@@ -179,15 +185,21 @@ async function setupProductDetailPage() {
         }
 
         try {
-          const { wishlist } = await apiRequest("/wishlists/me");
-          await apiRequest(`/wishlists/${wishlist.id}/items`, {
+          await apiRequest("/wishlists/me/items", {
             method: "POST",
             body: JSON.stringify({ productId: product.id })
           });
           addedToWishlist = true;
           wishlistButton.textContent = "Zur Wunschliste ✓";
         } catch (error) {
-          window.location.href = "../auth/login.html";
+          // Nur wenn wirklich nicht eingeloggt zum Login leiten, sonst Fehler anzeigen
+          const needsLogin = /authentication|angemeldet|einloggen|401/i.test(error.message);
+          if (needsLogin) {
+            wishlistButton.textContent = "Zum Anmelden";
+            window.setTimeout(() => { window.location.href = "../auth/login.html"; }, 900);
+          } else {
+            wishlistButton.textContent = "Fehler – erneut versuchen";
+          }
         }
       });
     }

@@ -2,6 +2,7 @@ const db = require("../config/db");
 
 const ACTION_ALIASES = {
   add: "create",
+  add_item: "add_item",
   add_to_cart: "add_to_cart",
   anpassen: "update",
   bearbeiten: "update",

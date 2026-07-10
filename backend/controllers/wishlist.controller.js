@@ -87,6 +87,18 @@ async function userExists(userId) {
   return Boolean(result.rows[0]);
 }
 
+// Sucht die User-ID zu einer E-Mail-Adresse (fuer das Teilen per E-Mail)
+async function findUserIdByEmail(email) {
+  const normalized = String(email || "").trim().toLowerCase();
+  const result = await db.query("SELECT id FROM users WHERE email = $1", [normalized]);
+
+  if (!result.rows[0]) {
+    throw createError(404, "user not found");
+  }
+
+  return result.rows[0].id;
+}
+
 // Gibt alle Produkte einer Wunschliste zurück (inkl. aktuelle Produktdaten via JOIN)
 async function getWishlistItems(wishlistId) {
   const result = await db.query(
@@ -173,6 +185,36 @@ async function getMyWishlist(req, res, next) {
 
     res.status(200).json({
       wishlist: toWishlist(wishlist, items, permissions)
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+// PATCH /wishlists/me: Name und/oder Beschreibung der persönlichen Wunschliste ändern (WUN-1)
+async function updateMyWishlist(req, res, next) {
+  try {
+    const wishlist = await getOrCreateMyWishlist(req.user.id);
+
+    const name = req.body.name !== undefined ? normalizeText(req.body.name, "name") : wishlist.name;
+    const description = req.body.description !== undefined
+      ? (String(req.body.description).trim() || null)
+      : wishlist.description;
+
+    const result = await db.query(
+      `UPDATE wishlists
+       SET name = $1, description = $2
+       WHERE id = $3
+       RETURNING id, name, description, created_at`,
+      [name, description, wishlist.id]
+    );
+
+    const items = await getWishlistItems(wishlist.id);
+    const permissions = await getWishlistPermissions(wishlist.id);
+
+    res.status(200).json({
+      message: "wishlist updated",
+      wishlist: toWishlist(result.rows[0], items, permissions)
     });
   } catch (error) {
     next(error);
@@ -395,7 +437,15 @@ async function deleteWishlist(req, res, next) {
 async function setPermission(req, res, next) {
   try {
     const wishlistId = normalizeId(req.params.id, "wishlistId");
-    const userId = normalizeId(req.body.userId ?? req.params.userId, "userId");
+    // Ziel-Nutzer entweder per User-ID oder per E-Mail-Adresse angeben (WUN-4)
+    let userId;
+    if (req.params.userId) {
+      userId = normalizeId(req.params.userId, "userId");
+    } else if (req.body.email) {
+      userId = await findUserIdByEmail(req.body.email);
+    } else {
+      userId = normalizeId(req.body.userId, "userId");
+    }
     const role = normalizeRole(req.body.role);
 
     // Owner Berechtigung kann nicht überschrieben werden
@@ -458,6 +508,7 @@ module.exports = {
   createWishlist,
   deleteWishlist,
   getMyWishlist,
+  updateMyWishlist,
   getWishlistById,
   listWishlists,
   removePermission,

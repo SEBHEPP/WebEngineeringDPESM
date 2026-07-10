@@ -35,25 +35,41 @@
 
 
 <main>
-  <section class="page-hero"><div class="container"><p class="eyebrow">Account</p><h1>Meine Wunschliste</h1><p class="lead">Deine gespeicherten Produkte. Über eine Produktseite mit „Zur Wunschliste" hinzufügen.</p><div style="margin-top:20px;display:flex;gap:12px;flex-wrap:wrap"><a class="btn secondary" href="../shop/orders.html">Zur Kaufhistorie</a><button class="btn secondary" id="copyWishlistLink" type="button">Link kopieren</button></div></div></section>
+  <section class="page-hero"><div class="container">
+    <p class="eyebrow">Account</p>
+    <h1 id="wishlistTitle">Meine Wunschliste</h1>
+    <p class="lead" id="wishlistDescription">Deine gespeicherten Produkte. Über eine Produktseite mit „Zur Wunschliste" hinzufügen.</p>
+    <p class="session-hint" id="profileIdentity" style="margin-top:14px">Profil wird geladen...</p>
+    <div style="margin-top:20px"><a class="btn secondary" href="../shop/orders.html">Zur Kaufhistorie</a></div>
+  </div></section>
   <section class="section" style="padding-top:26px">
     <div class="container wishlist-layout" id="wishlistPage">
-      <div class="table-card" id="wishlistItems">
-        <p class="session-hint">Wunschliste wird geladen...</p>
+      <div class="table-card">
+        <div class="admin-tools">
+          <h3>Liste bearbeiten</h3>
+          <form class="form-grid" id="wishlistEditForm">
+            <div class="field full"><label>Name</label><input name="name" placeholder="Meine Wunschliste"></div>
+            <div class="field full"><label>Beschreibung</label><textarea name="description" rows="2" placeholder="Optionale Beschreibung"></textarea></div>
+            <div class="field full"><button class="btn small secondary" type="submit">Speichern</button></div>
+          </form>
+        </div>
+        <div id="wishlistItems">
+          <p class="session-hint">Wunschliste wird geladen...</p>
+        </div>
       </div>
       <aside class="summary-card">
         <h3>Teilen</h3>
         <form id="wishlistPermissionForm">
-          <div class="field" style="margin-top:16px"><label>User-ID</label><input name="userId" placeholder="2" required></div>
+          <div class="field" style="margin-top:16px"><label>E-Mail oder User-ID</label><input name="target" placeholder="freund@example.de oder 2" required></div>
           <div class="field" style="margin-top:12px"><label>Berechtigung</label><select name="role"><option value="read">Leseberechtigung</option><option value="write">Schreibberechtigung</option></select></div>
-          <button class="btn" type="submit" style="width:100%;margin-top:16px">Berechtigung setzen</button>
+          <button class="btn" type="submit" style="width:100%;margin-top:16px">Teilen</button>
         </form>
         <div class="permission-list" id="wishlistPermissions"></div>
         <p class="session-hint" id="wishlistMessage"></p>
       </aside>
-      <div class="table-card full-width">
+      <div class="table-card" style="grid-column:1 / -1">
         <h3>Mit mir geteilte Wunschlisten</h3>
-        <div id="sharedWishlists" class="permission-list">
+        <div id="sharedWishlists">
           <p class="session-hint">Geteilte Listen werden geladen...</p>
         </div>
       </div>

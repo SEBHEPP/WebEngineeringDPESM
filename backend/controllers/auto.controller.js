@@ -1,8 +1,10 @@
 // Sebi
 const authorizationService = require("../services/authorization.service");
 
+// Die im Request-Body angegebene userId hat Vorrang, damit die AUTO-1-Prueffläche
+// im Admin-Dashboard fuer beliebige Nutzer entscheiden kann (nicht nur den eingeloggten Admin).
 function resolveUserId(req) {
-  return req.user?.id || req.body.userId;
+  return req.body.userId || req.user?.id;
 }
 
 async function checkAuthorization(req, res, next) {
