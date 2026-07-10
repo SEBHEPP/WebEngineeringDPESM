@@ -38,10 +38,10 @@
   <section class="page-hero"><div class="container"><p class="eyebrow">Admin</p><h1>Dashboard</h1><p class="lead">Übersicht für Produktverwaltung, Userverwaltung und Shop-Status.</p></div></section>
   <section class="section" style="padding-top:26px"><div class="container">
     <div class="dashboard-grid">
-      <div class="metric-card"><span>Produkte</span><strong>24</strong></div>
-      <div class="metric-card"><span>User</span><strong>128</strong></div>
-      <div class="metric-card"><span>Bestellungen</span><strong>42</strong></div>
-      <div class="metric-card"><span>Wunschlisten</span><strong>17</strong></div>
+      <div class="metric-card"><span>Produkte</span><strong>-</strong></div>
+      <div class="metric-card"><span>User</span><strong>-</strong></div>
+      <div class="metric-card"><span>Bestellungen</span><strong>-</strong></div>
+      <div class="metric-card"><span>Wunschlisten</span><strong>-</strong></div>
     </div>
     <div class="table-card" style="margin-top:34px">
       <h3>Autorisierung prüfen</h3>
@@ -53,7 +53,6 @@
         <div class="field"><label>Ergebnis</label><input id="autoResult" value="erlaubt / abgelehnt" readonly></div>
         <div class="field"><label>&nbsp;</label><button id="autoCheckBtn" class="btn" type="button">Prüfen</button></div>
       </div>
-      <p class="interface-note">AUTO-1: Diese Oberfläche ist die einfache Frontend-Schnittstelle für die spätere Entscheidung per User-ID, Ressource-ID und Aktion.</p>
     </div>
     <div class="section-head" style="margin-top:34px"><a class="btn" href="products.html">Produkte verwalten</a><a class="btn secondary" href="users.html">User verwalten</a></div>
   </div></section>
@@ -89,6 +88,7 @@
 </footer>
 
 <script src="../../js/api.js"></script>
+<script src="../../js/admin.js"></script>
 <script src="../../js/auto-check.js"></script>
 </body>
 </html>

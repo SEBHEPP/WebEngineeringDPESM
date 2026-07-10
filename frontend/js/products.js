@@ -196,17 +196,20 @@ async function setupProductDetailPage() {
   }
 }
 
-function setupAdminProductsPage() {
+async function setupAdminProductsPage() {
   const tableBody = document.getElementById("adminProductsBody");
   const form = document.getElementById("adminProductForm");
   const searchForm = document.getElementById("adminProductSearchForm");
   const message = document.getElementById("adminProductMessage");
   if (!tableBody) return;
 
+  const admin = await requireAdmin();
+  if (!admin) return;
+
   async function render(params = {}) {
     try {
       const products = await loadProducts(params);
-      tableBody.innerHTML = products.map((product) => `
+      tableBody.innerHTML = products.length ? products.map((product) => `
         <tr>
           <td>${product.id}</td>
           <td>${product.name}</td>
@@ -216,7 +219,7 @@ function setupAdminProductsPage() {
           <td><span class="status ${product.availableQuantity > 0 ? "green" : "red"}">${product.availableQuantity > 0 ? "Aktiv" : "Leer"}</span></td>
           <td><div class="button-row"><button class="btn small secondary" data-edit-product="${product.id}" type="button">Bearbeiten</button><button class="btn small danger" data-delete-product="${product.id}" type="button">Löschen</button></div></td>
         </tr>
-      `).join("");
+      `).join("") : "<tr><td colspan=\"7\">Keine Produkte gefunden.</td></tr>";
 
       tableBody.querySelectorAll("[data-edit-product]").forEach((button) => {
         button.addEventListener("click", () => {
@@ -238,6 +241,7 @@ function setupAdminProductsPage() {
         });
       });
     } catch (error) {
+      tableBody.innerHTML = `<tr><td colspan="7">${error.message}</td></tr>`;
       setMessage(message, error.message, "error");
     }
   }

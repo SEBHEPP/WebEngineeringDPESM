@@ -42,15 +42,13 @@
         <div class="admin-tools">
           <h3>Produkt suchen</h3>
           <form class="form-grid" id="adminProductSearchForm">
-            <div class="field"><label>Produkt-ID</label><input name="productId" placeholder="GM-1001"></div>
+            <div class="field"><label>Produkt-ID</label><input name="productId" placeholder="1"></div>
             <div class="field"><label>Name oder Kategorie</label><input name="productQuery" placeholder="Anzug oder Schuhe"></div>
             <div class="field"><label>&nbsp;</label><button class="btn" type="submit">Suchen</button></div>
           </form>
-          <p class="interface-note">Backend-Schnittstelle: gezielte Suche per ID und Produktsuche mit mindestens zwei Suchkriterien.</p>
         </div>
         <table class="clean-table"><thead><tr><th>ID</th><th>Name</th><th>Beschreibung</th><th>Preis</th><th>Bestand</th><th>Status</th><th>Aktion</th></tr></thead>
-        <tbody id="adminProductsBody"><tr><td>GM-1001</td><td>Anzug Milano</td><td>Moderner Schnitt in Anthrazit</td><td>249,90 €</td><td>14</td><td><span class="status green">Aktiv</span></td><td><div class="button-row"><a class="btn small secondary" href="products.html">Bearbeiten</a><a class="btn small danger" href="products.html">Löschen</a></div></td></tr>
-        <tr><td>GM-1003</td><td>Lederschuh Noir</td><td>Eleganter Lederschuh</td><td>129,90 €</td><td>0</td><td><span class="status red">Leer</span></td><td><div class="button-row"><a class="btn small secondary" href="products.html">Bearbeiten</a><a class="btn small danger" href="products.html">Löschen</a></div></td></tr></tbody></table>
+        <tbody id="adminProductsBody"><tr><td colspan="7">Produkte werden geladen...</td></tr></tbody></table>
       </div>
       <form class="summary-card" id="adminProductForm">
         <h3>Produkt anlegen</h3>
@@ -61,8 +59,7 @@
         <div class="field" style="margin-top:12px"><label>Preis</label><input name="price" placeholder="0.00" required></div>
         <div class="field" style="margin-top:12px"><label>Menge</label><input name="availableQuantity" placeholder="0" required></div>
         <button class="btn" type="submit" style="width:100%;margin-top:16px">Speichern</button>
-        <p class="session-hint" id="adminProductMessage">Admin-CRUD nutzt geschützte Produkt-Endpunkte.</p>
-        <p class="interface-note">Erstellen, Bearbeiten und Löschen bleiben bewusst als einfache UI-Schnittstellen vorbereitet.</p>
+        <p class="session-hint" id="adminProductMessage"></p>
       </form>
     </div>
   </section>

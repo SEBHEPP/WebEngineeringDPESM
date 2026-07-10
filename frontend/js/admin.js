@@ -1,14 +1,40 @@
 // Elias
 document.addEventListener("DOMContentLoaded", () => {
+  setupAdminDashboard();
   setupAdminUsersPage();
 });
 
-function setupAdminUsersPage() {
+async function setupAdminDashboard() {
+  const grid = document.querySelector(".dashboard-grid");
+  if (!grid) return;
+
+  const admin = await requireAdmin();
+  if (!admin) return;
+
+  try {
+    const stats = await apiRequest("/admin/stats");
+    const metrics = grid.querySelectorAll(".metric-card strong");
+
+    if (metrics[0]) metrics[0].textContent = stats.products;
+    if (metrics[1]) metrics[1].textContent = stats.users;
+    if (metrics[2]) metrics[2].textContent = stats.orders;
+    if (metrics[3]) metrics[3].textContent = stats.wishlists;
+  } catch (error) {
+    grid.querySelectorAll(".metric-card strong").forEach((el) => {
+      el.textContent = "-";
+    });
+  }
+}
+
+async function setupAdminUsersPage() {
   const tableBody = document.getElementById("adminUsersBody");
   const searchForm = document.getElementById("adminUserSearchForm");
   const adminForm = document.getElementById("adminCreateForm");
   const message = document.getElementById("adminUserMessage");
   if (!tableBody) return;
+
+  const admin = await requireAdmin();
+  if (!admin) return;
 
   async function render(params = {}) {
     try {
@@ -47,6 +73,7 @@ function setupAdminUsersPage() {
         });
       });
     } catch (error) {
+      tableBody.innerHTML = `<tr><td colspan="6">${error.message}</td></tr>`;
       setMessage(message, error.message, "error");
     }
   }

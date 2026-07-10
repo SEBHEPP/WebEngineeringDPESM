@@ -77,6 +77,19 @@ async function getSession() {
   }
 }
 
+// Schuetzt Admin-Seiten: leitet nicht eingeloggte oder nicht-Admin-Nutzer zum Login um.
+// Gibt bei Erfolg den eingeloggten Admin-User zurueck, sonst null.
+async function requireAdmin() {
+  const session = await getSession();
+
+  if (!session.authenticated || !session.user?.isAdmin) {
+    window.location.href = "../auth/login.html";
+    return null;
+  }
+
+  return session.user;
+}
+
 function createFrontendLink(loginHref, target) {
   if (loginHref.includes("pages/auth/")) {
     return `pages/${target}`;
