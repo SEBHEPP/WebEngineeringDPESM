@@ -1,3 +1,4 @@
+// Sebi
 const db = require("../config/db");
 
 async function getHealth(req, res) {

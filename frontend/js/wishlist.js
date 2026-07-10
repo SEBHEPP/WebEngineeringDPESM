@@ -1,4 +1,4 @@
-// Elias
+// Dennis
 document.addEventListener("DOMContentLoaded", () => {
   setupMyWishlist();
   setupWishlistDetail();

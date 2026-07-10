@@ -1,5 +1,5 @@
 -- Datenbank Setup
--- Erstellt von: Dennis
+-- Dennis
 
 -- USER & AUTHENTIFIZIERUNG
 CREATE TABLE users (
