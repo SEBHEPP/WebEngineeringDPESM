@@ -20,8 +20,5 @@ router.get("/me", authController.authenticate, authController.getSession);
 router.post("/magic/request", authController.requestMagicLogin);
 router.post("/magic/verify", authController.verifyMagicLogin);
 router.get("/magic/login", authController.verifyMagicLoginLink);
-router.post("/magic-login/request", authController.requestMagicLogin);
-router.post("/magic-login/verify", authController.verifyMagicLogin);
-router.get("/magic-login/login", authController.verifyMagicLoginLink);
 
 module.exports = router;
