@@ -79,9 +79,6 @@
 .table-card { overflow-x: auto; }
 .clean-table th, .clean-table td { border-bottom: 1px solid var(--line); font-size: .82rem; padding: 14px 10px; text-align: left; }
 .clean-table th { color: var(--brown-dark); font-size: .68rem; letter-spacing: .1em; text-transform: uppercase; }
-.legal-content { margin-inline: auto; max-width: 900px; padding: clamp(28px, 5vw, 60px); }
-.legal-content h2 { font-size: 1.8rem; margin-top: 32px; }
-.legal-content p { color: var(--muted); margin-top: 12px; }
 .empty-state { background: var(--white); border: 1px dashed var(--line); padding: 38px; text-align: center; }
 .interface-note { background: var(--cream); border-left: 3px solid var(--brown); color: var(--muted); font-size: .82rem; margin-top: 18px; padding: 14px 16px; }
 .button-row { display: flex; flex-wrap: wrap; gap: 10px; }

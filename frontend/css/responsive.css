@@ -6,7 +6,7 @@
   .split, .product-layout, .cart-layout, .admin-layout, .wishlist-layout, .checkout-grid { grid-template-columns: 1fr; }
   .product-info, .summary-card { position: static; }
   .dashboard-grid { grid-template-columns: repeat(2, 1fr); }
-  .footer-grid { grid-template-columns: repeat(2, 1fr); }
+  .footer-grid { grid-template-columns: 1fr; }
   .collection-overview { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (min-width: 1440px) {

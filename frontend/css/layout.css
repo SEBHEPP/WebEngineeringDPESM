@@ -16,6 +16,6 @@
 .split { align-items: center; display: grid; gap: clamp(30px, 6vw, 84px); grid-template-columns: 1fr 1fr; }
 .feature-grid, .products-grid, .collections-grid { display: grid; gap: 22px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .footer { background: var(--brown-dark); color: var(--cream); margin-top: 80px; padding: 62px 0 42px; }
-.footer-grid { display: grid; gap: 42px; grid-template-columns: 1.4fr repeat(3, 1fr); }
+.footer-grid { display: grid; gap: 16px; grid-template-columns: 1fr; }
 .footer h3 { color: var(--white); font-size: 1rem; margin-bottom: 15px; }
 .footer a, .footer p { color: #cfc1b2; display: block; font-size: .78rem; margin-top: 9px; }

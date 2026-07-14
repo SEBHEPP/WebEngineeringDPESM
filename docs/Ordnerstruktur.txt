@@ -56,14 +56,6 @@ webshop-projekt/
 │       │   ├── magic-login.html
 │       │   ├── register.html
 │       │   └── verify.html
-│       ├── legal/           # Rechtliches & Footer-Links
-│       │   ├── agb.html
-│       │   ├── cookie.html
-│       │   ├── datenschutz.html
-│       │   ├── impressum.html
-│       │   ├── kontakt.html
-│       │   ├── versand.html
-│       │   └── widerruf.html
 │       ├── shop/            # Shop & Kaufabwicklung
 │       │   ├── anzuege.html
 │       │   ├── cart.html

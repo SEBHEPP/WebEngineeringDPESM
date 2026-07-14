@@ -142,10 +142,6 @@ flowchart TD
     L --> R["Wunschlisten-Detail<br/>pages/wishlist/wishlist-detail.html"]
     L --> N
 
-    A --> S["Kontakt<br/>pages/legal/kontakt.html"]
-    A --> T["Versand<br/>pages/legal/versand.html"]
-    A --> U["Impressum / Datenschutz / AGB / Widerruf"]
-
     V["Admin-Dashboard<br/>pages/admin/dashboard.html"] --> W["Produktverwaltung<br/>pages/admin/products.html"]
     V --> X["Userverwaltung<br/>pages/admin/users.html"]
 ```

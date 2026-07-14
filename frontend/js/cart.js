@@ -96,11 +96,6 @@ function setupCheckoutPage() {
       return;
     }
 
-    if (!form.terms.checked) {
-      setMessage(message, "Bitte akzeptiere die AGB.", "error");
-      return;
-    }
-
     try {
       const data = await apiRequest("/orders/checkout", {
         method: "POST",

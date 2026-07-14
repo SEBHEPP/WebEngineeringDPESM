@@ -51,7 +51,7 @@ Im Checkout wird die Bestellung nochmal zusammengefasst. Danach wird der Kauf ge
 
 - Warenkorb prüfen
 - Bestellübersicht kontrollieren
-- AGB bestätigen
+- Lieferdaten prüfen
 - Bestellung absenden
 - danach zur Bestellhistorie wechseln
 - Kaufbestätigung in Maildev prüfen

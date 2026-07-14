@@ -20,7 +20,7 @@
 }
 .header-search:hover input, .header-search:focus-within input { border-color: var(--line); opacity: 1; pointer-events: auto; width: min(260px, 26vw); }
 .header-search input:focus { outline: none; }
-.text-card, .table-card, .summary-card, .panel-card, .form, .legal-content, .search-page-box {
+.text-card, .table-card, .summary-card, .panel-card, .form, .search-page-box {
   background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow);
 }
 .text-card { padding: clamp(30px, 5vw, 64px); }
