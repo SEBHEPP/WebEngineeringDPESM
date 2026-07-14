@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="430" viewBox="0 0 760 430">
+  <rect width="760" height="430" fill="#fbf9f5"/>
+  <rect x="30" y="24" width="700" height="382" rx="12" fill="#fff" stroke="#35271f" stroke-width="2"/>
+  <rect x="52" y="44" width="656" height="44" rx="7" fill="#f3ede4" stroke="#785b43"/>
+  <text x="380" y="71" fill="#35271f" font-family="Arial" font-size="12" text-anchor="middle">Header / Navigation</text>
+  <text x="65" y="118" fill="#35271f" font-family="Arial" font-size="20" font-weight="700">Warenkorb / Checkout</text>
+  <rect x="58" y="145" width="420" height="205" rx="10" fill="#fffaf4" stroke="#bd9b77" stroke-width="2"/>
+  <text x="268" y="170" fill="#35271f" font-family="Arial" font-size="13" text-anchor="middle">Produkte im Warenkorb</text>
+  <g fill="#fff" stroke="#ded5ca">
+    <rect x="80" y="190" width="374" height="38" rx="6"/>
+    <rect x="80" y="240" width="374" height="38" rx="6"/>
+    <rect x="80" y="290" width="374" height="38" rx="6"/>
+  </g>
+  <g fill="#eadfce" stroke="#bd9b77">
+    <rect x="92" y="198" width="44" height="22" rx="4"/>
+    <rect x="92" y="248" width="44" height="22" rx="4"/>
+    <rect x="92" y="298" width="44" height="22" rx="4"/>
+  </g>
+  <text x="158" y="213" fill="#746d66" font-family="Arial" font-size="10">Bild + Name + Menge + Preis</text>
+  <text x="158" y="263" fill="#746d66" font-family="Arial" font-size="10">Bild + Name + Menge + Preis</text>
+  <text x="158" y="313" fill="#746d66" font-family="Arial" font-size="10">Bild + Name + Menge + Preis</text>
+  <rect x="505" y="145" width="198" height="205" rx="10" fill="#f3ede4" stroke="#785b43" stroke-width="2"/>
+  <text x="604" y="172" fill="#35271f" font-family="Arial" font-size="14" font-weight="700" text-anchor="middle">Zusammenfassung</text>
+  <line x1="530" y1="205" x2="678" y2="205" stroke="#ded5ca"/>
+  <line x1="530" y1="235" x2="678" y2="235" stroke="#ded5ca"/>
+  <line x1="530" y1="265" x2="678" y2="265" stroke="#ded5ca"/>
+  <rect x="535" y="295" width="138" height="28" rx="14" fill="#35271f"/>
+  <text x="604" y="313" fill="#fff" font-family="Arial" font-size="10" text-anchor="middle">Zur Kasse</text>
+</svg>

@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="430" viewBox="0 0 760 430">
+  <rect width="760" height="430" fill="#fbf9f5"/>
+  <rect x="30" y="24" width="700" height="382" rx="12" fill="#fff" stroke="#35271f" stroke-width="2"/>
+  <rect x="52" y="44" width="656" height="44" rx="7" fill="#f3ede4" stroke="#785b43"/>
+  <text x="78" y="71" fill="#35271f" font-family="Arial" font-size="13" font-weight="700">Header</text>
+  <text x="420" y="71" fill="#35271f" font-family="Arial" font-size="12" text-anchor="middle">Kategorien + Header-Suche</text>
+  <rect x="52" y="108" width="656" height="66" rx="8" fill="#eadfce" stroke="#bd9b77"/>
+  <text x="80" y="137" fill="#35271f" font-family="Arial" font-size="18" font-weight="700">Produktübersicht</text>
+  <text x="80" y="157" fill="#785b43" font-family="Arial" font-size="11">Suchfeld, kurzer Text und Preis-Sortierung</text>
+  <rect x="52" y="192" width="656" height="32" rx="7" fill="#fffaf4" stroke="#ded5ca"/>
+  <text x="80" y="212" fill="#746d66" font-family="Arial" font-size="11">Filterleiste: Suche | Preis aufsteigend | Preis absteigend</text>
+  <g fill="#fff" stroke="#785b43" stroke-width="1.4">
+    <rect x="52" y="246" width="198" height="118" rx="8"/>
+    <rect x="281" y="246" width="198" height="118" rx="8"/>
+    <rect x="510" y="246" width="198" height="118" rx="8"/>
+  </g>
+  <g fill="#eadfce" stroke="#bd9b77">
+    <rect x="66" y="260" width="170" height="50" rx="6"/>
+    <rect x="295" y="260" width="170" height="50" rx="6"/>
+    <rect x="524" y="260" width="170" height="50" rx="6"/>
+  </g>
+  <g fill="#35271f" font-family="Arial" font-size="11" text-anchor="middle">
+    <text x="151" y="329">Produktkarte</text>
+    <text x="380" y="329">Produktkarte</text>
+    <text x="609" y="329">Produktkarte</text>
+  </g>
+  <g fill="#785b43" font-family="Arial" font-size="10" text-anchor="middle">
+    <text x="151" y="348">Bild, Name, Preis, Button</text>
+    <text x="380" y="348">Bild, Name, Preis, Button</text>
+    <text x="609" y="348">Bild, Name, Preis, Button</text>
+  </g>
+</svg>

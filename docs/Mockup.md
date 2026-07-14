@@ -33,6 +33,8 @@ Die Startseite soll direkt zeigen, worum es geht: hochwertiger Gentleman-Shop.
 - Trust-Elemente wie Versand und Qualität
 - Newsletter-Bereich
 
+![Skizze Startseite](mockups/startseite.svg)
+
 ### Shop- und Kategorie-Seiten
 
 Diese Seiten sind für das Stöbern und Suchen gedacht.
@@ -43,6 +45,8 @@ Diese Seiten sind für das Stöbern und Suchen gedacht.
 - Produktkarten mit Bild, Name, Preis und Button
 - Desktop: mehrere Spalten
 - Mobile: eine Spalte
+
+![Skizze Produktübersicht](mockups/produktuebersicht.svg)
 
 ### Produktdetailseite
 
@@ -57,6 +61,8 @@ Die Detailseite soll genug Informationen geben, damit man kaufen kann.
 - Wunschlisten-Button
 - Versandhinweise
 
+![Skizze Produktdetailseite](mockups/produktdetail.svg)
+
 ### Warenkorb und Checkout
 
 Der Kaufprozess soll möglichst klar sein.
@@ -66,6 +72,8 @@ Der Kaufprozess soll möglichst klar sein.
 - Checkout mit Bestellübersicht
 - klare Fehlermeldungen, falls etwas fehlt
 - nach Bestellung Weiterleitung zur Historie
+
+![Skizze Warenkorb und Checkout](mockups/warenkorb-checkout.svg)
 
 ### Account und Wunschlisten
 
@@ -77,6 +85,8 @@ Dieser Bereich ist für eingeloggte User.
 - geteilte Wunschlisten anzeigen
 - Bestellhistorie erreichen
 
+![Skizze Account und Wunschliste](mockups/account-wunschliste.svg)
+
 ### Admin-Bereich
 
 Der Admin-Bereich ist sachlicher als der normale Shop.
@@ -86,6 +96,8 @@ Der Admin-Bereich ist sachlicher als der normale Shop.
 - Userverwaltung
 - Tabellen für schnelle Übersicht
 - Formulare für neue oder bearbeitete Daten
+
+![Skizze Admin-Bereich](mockups/admin.svg)
 
 ## Verlinkung zwischen den Webseiten
 
